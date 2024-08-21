@@ -98,29 +98,27 @@ class ScenarioHandler(object):
         :param period_name:
         :return period_type
         """
-        if period_name in [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-        ]:
-            return "monthly"
-        if period_name in ["Q1", "Q2", "Q3", "Q4"]:
-            return "quarterly"
-        if period_name in ["H1", "H2"]:
-            return "halfyearly"
-        if period_name == "Year":
-            return "yearly"
+        # Define a mapping of period names to their respective types
+        period_mapping = {
+            "monthly": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            "quarterly": ["Q1", "Q2", "Q3", "Q4"],
+            "halfyearly": ["H1", "H2"],
+            "yearly": ["Year"],
+            "weekly": [],  # Weekly periods are handled separately
+        }
+        
+        # Check the period name in the dictionary
+        for period_type, periods in period_mapping.items():
+            if period_name in periods:
+                return period_type
+
+        # Handle weekly periods separately since they start with "W_"
         if period_name.startswith("W_"):
             return "weekly"
+
+        # Return None or raise an exception if the period_name is invalid (optional)
+        return None
+
 
     def get_initial_user_scenario(self, user_id, scenario_name=None, period_type=None):
         """
