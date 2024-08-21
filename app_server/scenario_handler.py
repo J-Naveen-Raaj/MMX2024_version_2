@@ -354,6 +354,7 @@ class ScenarioHandler(object):
         #         scenario_id, period_type
         #     )
         # )
+        WEEK_END_DATE_COL = "week_end_date"
         output = output.loc[:, ["month", "spend_value", "node_name"]]
         output = output.rename(columns={"month": "period_name"})
         node_mapping = pd.DataFrame.from_records(
@@ -421,13 +422,13 @@ class ScenarioHandler(object):
             ].transform(sum)
             weeks_of_base["week_period_repr"] = (
                 "W_"
-                + weeks_of_base["week_end_date"].dt.isocalendar().week.astype(str)
+                + weeks_of_base[WEEK_END_DATE_COL].dt.isocalendar().week.astype(str)
                 + " "
-                + weeks_of_base["week_end_date"].dt.strftime("%Y")
+                + weeks_of_base[WEEK_END_DATE_COL].dt.strftime("%Y")
                 + "-"
-                + weeks_of_base["week_end_date"].dt.strftime("%b")
+                + weeks_of_base[WEEK_END_DATE_COL].dt.strftime("%b")
                 + "-"
-                + weeks_of_base["week_end_date"].dt.day.astype(str)
+                + weeks_of_base[WEEK_END_DATE_COL].dt.day.astype(str)
             )
             simulated_spend_daily = pd.merge(
                 simulated_spend,
