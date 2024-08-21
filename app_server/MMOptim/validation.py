@@ -63,7 +63,7 @@ def basic_validation(base_scenario, lower_bounds, upper_bounds, constraints, bud
 
     ## RULE 1. total budget < sum of lower bounds
     rule = budget["total"] < np.sum(lower_bounds.values)
-   
+
     if rule == True:
         error_message = "ERROR: Total Budget < Sum of Lower Bounds"
         error_report.append(error_message)

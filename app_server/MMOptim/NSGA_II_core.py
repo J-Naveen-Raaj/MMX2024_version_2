@@ -96,22 +96,33 @@ class Problem(ElementwiseProblem):
         )
 
         out["F"] = [-np.exp(preds_1[0]), -np.exp(preds_2[0])]
+        out["G"] = self._calculate_constraints(x, data_df)
 
-        ineq_cons = []
-        budget_constraint = sum(x) - self.budget
-        ineq_cons.append(budget_constraint)
-        ineq_cons.append(budget_constraint)
+    def _calculate_constraints(self, x, data_df):
+        ineq_cons = [sum(x) - self.budget] * 2
+        for constraint_key, constraint_value in self.group_constraints.items():
+            sum_of_cons_var = sum_over_solution_idvs(data_df, constraint_value["var_list"])
+            if constraint_key[2] == "Cap":
+                ineq_cons.extend([sum_of_cons_var - constraint_value["value"]] * 2)
+            elif constraint_key[2] == "Min":
+                ineq_cons.extend([-sum_of_cons_var + constraint_value["value"]] * 2)
+        return ineq_cons
 
-        for constraint in self.group_constraints.items():
-            sum_of_cons_var = sum_over_solution_idvs(data_df, constraint[1]["var_list"])
-            if constraint[0][2] == "Cap":
-                ineq_cons.append(sum_of_cons_var - constraint[1]["value"])
-                ineq_cons.append(sum_of_cons_var - constraint[1]["value"])
-            if constraint[0][2] == "Min":
-                ineq_cons.append(-sum_of_cons_var + constraint[1]["value"])
-                ineq_cons.append(-sum_of_cons_var + constraint[1]["value"])
+        # ineq_cons = []
+        # budget_constraint = sum(x) - self.budget
+        # ineq_cons.append(budget_constraint)
+        # ineq_cons.append(budget_constraint)
 
-        out["G"] = ineq_cons
+        # for constraint in self.group_constraints.items():
+        #     sum_of_cons_var = sum_over_solution_idvs(data_df, constraint[1]["var_list"])
+        #     if constraint[0][2] == "Cap":
+        #         ineq_cons.append(sum_of_cons_var - constraint[1]["value"])
+        #         ineq_cons.append(sum_of_cons_var - constraint[1]["value"])
+        #     if constraint[0][2] == "Min":
+        #         ineq_cons.append(-sum_of_cons_var + constraint[1]["value"])
+        #         ineq_cons.append(-sum_of_cons_var + constraint[1]["value"])
+
+        # out["G"] = ineq_cons
 
 
 def NSGA(

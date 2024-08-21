@@ -5,6 +5,11 @@ import time
 import numpy as np
 import pandas as pd
 
+BASE_SCENARIO_LABEL = "Base Scenario"
+OPTIMAL_SCENARIO_LABEL = "Optimal Scenario"
+VARIABLE_DESCRIPTION_LABEL = "Variable Description"
+TIME_PERIOD_LABEL = "Time Period"
+
 # %% Compare Base vs New Scenario
 
 
@@ -54,37 +59,36 @@ def get_optim_output(
 
     var_desc = optim_input["var_desc"]
     spend_comparison = compare_base_vs_new(
-        base_scenario.sum(axis=1).rename("Base Scenario"),
-        optimal_scenario.sum(axis=1).rename("Optimal Scenario"),
+        base_scenario.sum(axis=1).rename(BASE_SCENARIO_LABEL),
+        optimal_scenario.sum(axis=1).rename(OPTIMAL_SCENARIO_LABEL ),
         pct_scale,
     )
     spend_comparison = pd.merge(
         var_desc, spend_comparison, left_index=True, right_index=True
     )
     spend_comparison.reset_index(inplace=True)
-    spend_comparison.sort_values(["Variable Description"], axis=0, inplace=True)
+    spend_comparison.sort_values([VARIABLE_DESCRIPTION_LABEL], axis=0, inplace=True)
 
     optimal_spend_plan = pd.merge(
         var_desc, optimal_scenario, left_index=True, right_index=True
     )
     optimal_spend_plan.drop("Variable Category", axis=1, inplace=True)
     optimal_spend_plan.reset_index(inplace=True)
-    optimal_spend_plan.sort_values(["Variable Description"], axis=0, inplace=True)
+    optimal_spend_plan.sort_values([VARIABLE_DESCRIPTION_LABEL ], axis=0, inplace=True)
 
     # Spend by period in long format
     lb_long = (
-        lower_bounds.rename_axis("Time Period", axis=1).stack().rename("Lower Bound")
+        lower_bounds.rename_axis(TIME_PERIOD_LABEL, axis=1).stack().rename("Lower Bound")
     )
     ub_long = (
-        upper_bounds.rename_axis("Time Period", axis=1).stack().rename("Upper Bound")
+        upper_bounds.rename_axis(TIME_PERIOD_LABEL, axis=1).stack().rename("Upper Bound")
     )
     base_scn_long = (
-        base_scenario.rename_axis("Time Period", axis=1).stack().rename("Base Scenario")
-    )
+        base_scenario.rename_axis(TIME_PERIOD_LABEL, axis=1).stack().rename(BASE_SCENARIO_LABEL))
     optim_scn_long = (
-        optimal_scenario.rename_axis("Time Period", axis=1)
+        optimal_scenario.rename_axis(TIME_PERIOD_LABEL, axis=1)
         .stack()
-        .rename("Optimal Scenario")
+        .rename(OPTIMAL_SCENARIO_LABEL)
     )
     spend_by_period = compare_base_vs_new(base_scn_long, optim_scn_long, pct_scale)
     spend_by_period = pd.concat([lb_long, ub_long, spend_by_period], axis=1)
@@ -94,7 +98,7 @@ def get_optim_output(
     )
     spend_by_period.reset_index(inplace=True)
     spend_by_period.sort_values(
-        ["Variable Description", "Time Period"], axis=0, inplace=True
+        [VARIABLE_DESCRIPTION_LABEL, TIME_PERIOD_LABEL], axis=0, inplace=True
     )
 
     ### Outcome comparison
@@ -116,8 +120,8 @@ def get_optim_output(
     )
 
     outcome_comparison = compare_base_vs_new(
-        base_scenario_outcome.rename("Base Scenario"),
-        optim_scenario_outcome.rename("Optimal Scenario"),
+        base_scenario_outcome.rename(BASE_SCENARIO_LABEL),
+        optim_scenario_outcome.rename(OPTIMAL_SCENARIO_LABEL),
         pct_scale,
     )
     outcome_comparison = outcome_comparison.unstack(level=0)
@@ -138,10 +142,10 @@ def get_optim_output(
 
     overall_index = ["Total Spend", optim_input["main_input"]["objective_to_max"]]
     overall_base = pd.Series(
-        [base_spend, base_obj_val], index=overall_index, name="Base Scenario"
+        [base_spend, base_obj_val], index=overall_index, name=BASE_SCENARIO_LABEL
     )
     overall_optim = pd.Series(
-        [optim_spend, optim_obj_val], index=overall_index, name="Optimal Scenario"
+        [optim_spend, optim_obj_val], index=overall_index, name=OPTIMAL_SCENARIO_LABEL
     )
     overall_comparison = compare_base_vs_new(overall_base, overall_optim, pct_scale)
 

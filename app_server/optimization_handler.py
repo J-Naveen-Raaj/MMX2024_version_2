@@ -1,5 +1,5 @@
 """
-This module is for handling optimization 
+This module is for handling optimization
 """
 
 import calendar as cal
@@ -27,6 +27,24 @@ sys.dont_write_bytecode = True
 import pandas as pd
 
 logger = get_logger(__name__)
+
+# Define constants
+COLUMN_VARIABLE_NAME = "Variable Name"
+COLUMN_VARIABLE_DESCRIPTION = "Variable Description"
+LOWER_BOUND = "Lower Bound"
+SCENARIO_EXISTS_MESSAGE = "Scenario already exist, Please enter new scenario name"
+LOWER_BOUND_CALC = "Lower Bound calc"
+UPPER_BOUND_CALC = "Upper Bound calc"
+LOWER_BOUND_PERCENT = "Lower Bound %"
+UPPER_BOUND_PERCENT = "Upper Bound %"
+LOWER_BOUND_EFF = "Lower Bound Eff"
+UPPER_BOUND_EFF = "Upper Bound Eff"
+LOWER_BOUND_DOLLAR = "Lower Bound $"
+UPPER_BOUND_DOLLAR = "Upper Bound $"
+SQL_SELECT_VARIABLES = "select variable_id,variable_name from variable_node_mapping "
+VARIABLE_CATEGORY = "Variable Category"
+BASE_SCENARIO = "Base Scenario"
+UPPER_BOUND = "Upper Bound"
 
 
 class OptimizationHandler(object):
@@ -89,8 +107,8 @@ class OptimizationHandler(object):
         try:
             scenario_data.rename(
                 columns={
-                    "Variable Name": "node_name",
-                    "Variable Description": "touchpoint_name",
+                    COLUMN_VARIABLE_NAME: "node_name",
+                    COLUMN_VARIABLE_DESCRIPTION: "touchpoint_name",
                 },
                 inplace=True,
             )
@@ -291,7 +309,7 @@ class OptimizationHandler(object):
                 base_simulated_spend["geo"] = "US"
                 base_simulated_spend["period_type"] = "quarterly"
                 base_simulated_spend.rename(
-                    columns={"Variable Name": "node_name"}, inplace=True
+                    columns={COLUMN_VARIABLE_NAME: "node_name"}, inplace=True
                 )
                 # TODO - Get year from optimization table
 
@@ -307,7 +325,7 @@ class OptimizationHandler(object):
 
                 base_spend_plan = pd.pivot_table(
                     base_spend_plan,
-                    index=["Variable Name", "Variable Description"],
+                    index=[COLUMN_VARIABLE_NAME, COLUMN_VARIABLE_DESCRIPTION],
                     columns="period_name",
                     values="spend_value",
                 ).reset_index()
@@ -332,8 +350,8 @@ class OptimizationHandler(object):
 
             ## *** 23/12/2019 - Kumar
             optim_input = self.get_optim_input(optimization_scenario_id)
-            optim_input["var_bounds"]["Lower Bound"] = optim_input["var_bounds"][
-                "Lower Bound"
+            optim_input["var_bounds"][LOWER_BOUND] = optim_input["var_bounds"][
+                LOWER_BOUND
             ].map(math.floor)
             print("optimization scenarion id", optimization_scenario_id)
             logger.info("Starting to run optimizer")
@@ -373,45 +391,46 @@ class OptimizationHandler(object):
         )
         return group_constraints
 
-    def create_optimization_scenario(self, request):
-        logger.info(
-            "creating a new optimization scenario with scenario name %s",
-            request["scenario_name"],
-        )
-        scenario_exist = self.optimization_dao.check_optimization_scenario_exist(
-            request["scenario_name"]
-        )
-        current_user.name = 'User'
-        if current_user.name:
-            if scenario_exist[0]["no_of_scenario"] == 0:
-                # transaction =self.db_conn.conn.begin()
-                self.optimization_dao.insert_optimization_scenario(
-                    request, current_user.name
-                )
-                record_id = int(
-                    pd.DataFrame.from_records(self.common_dao.get_optimization_scenario())
-                    .sort_values(by="id")
-                    .tail(1)["id"]
-                    .values[0]
-                )
-                return record_id
-            else:
-                logger.info(
-                    "scenario name %s already existing for the optimization scenario",
-                    request["scenario_name"],
-                )
-                return {
-                    "status": 303,
-                    "message": "Scenario already exist, Please enter new scenario name",
-                }
-        else:
-            logger.info(
-                "token expired please login again",
-            )
-            return {
-                "status": 401,
-                "message": "Token expired! Please login again",
-            }
+
+    # def create_optimization_scenario(self, request):
+    #     logger.info(
+    #         "creating a new optimization scenario with scenario name %s",
+    #         request["scenario_name"],
+    #     )
+    #     scenario_exist = self.optimization_dao.check_optimization_scenario_exist(
+    #         request["scenario_name"]
+    #     )
+    #     current_user.name = 'User'
+    #     if current_user.name:
+    #         if scenario_exist[0]["no_of_scenario"] == 0:
+    #             # transaction =self.db_conn.conn.begin()
+    #             self.optimization_dao.insert_optimization_scenario(
+    #                 request, current_user.name
+    #             )
+    #             record_id = int(
+    #                 pd.DataFrame.from_records(self.common_dao.get_optimization_scenario())
+    #                 .sort_values(by="id")
+    #                 .tail(1)["id"]
+    #                 .values[0]
+    #             )
+    #             return record_id
+    #         else:
+    #             logger.info(
+    #                 "scenario name %s already existing for the optimization scenario",
+    #                 request["scenario_name"],
+    #             )
+    #             return {
+    #                 "status": 303,
+    #                 "message": SCENARIO_EXISTS_MESSAGE,
+    #             }
+    #     else:
+    #         logger.info(
+    #             "token expired please login again",
+    #         )
+    #         return {
+    #             "status": 401,
+    #             "message": "Token expired! Please login again",
+    #         }
 
     def get_individual_basespends(self, request, period_type):
         results = self.optimization_dao.fetch_individual_basespends(
@@ -433,85 +452,85 @@ class OptimizationHandler(object):
         optimization_type = self.optimization_dao.get_optimization_type(scenario_id)
         optimization_type_id = optimization_type[0]["optimization_type_id"]
 
-        imported_data_df["Lower Bound calc"] = np.floor(
-            imported_data_df["spend"] * (100 + imported_data_df["Lower Bound %"]) / 100
+        imported_data_df[LOWER_BOUND_CALC] = np.floor(
+            imported_data_df["spend"] * (100 + imported_data_df[LOWER_BOUND_PERCENT]) / 100
         )
-        imported_data_df["Upper Bound calc"] = (
-            imported_data_df["spend"] * (100 + imported_data_df["Upper Bound %"]) / 100
+        imported_data_df[UPPER_BOUND_CALC] = (
+            imported_data_df["spend"] * (100 + imported_data_df[UPPER_BOUND_PERCENT]) / 100
         )
 
         if optimization_type_id == 4:
-            imported_data_df["Lower Bound Eff"] = imported_data_df["spend"]
+            imported_data_df[LOWER_BOUND_EFF] = imported_data_df["spend"]
         else:
             # Initialize effective lower bounds equal to base spends
-            imported_data_df["Lower Bound Eff"] = imported_data_df["spend"].astype(
+            imported_data_df[LOWER_BOUND_EFF] = imported_data_df["spend"].astype(
                 float
             )
 
             for i in range(0, len(imported_data_df)):
-                lb_calc_null = pd.isna(imported_data_df["Lower Bound calc"][i])
-                lb_dollar_null = pd.isna(imported_data_df["Lower Bound $"][i])
+                lb_calc_null = pd.isna(imported_data_df[LOWER_BOUND_CALC][i])
+                lb_dollar_null = pd.isna(imported_data_df[LOWER_BOUND_DOLLAR][i])
 
                 if lb_calc_null and lb_dollar_null:
-                    imported_data_df["Lower Bound Eff"][i] = imported_data_df["spend"][
+                    imported_data_df[LOWER_BOUND_EFF][i] = imported_data_df["spend"][
                         i
                     ]
                 elif lb_calc_null and not lb_dollar_null:
-                    imported_data_df["Lower Bound Eff"][i] = imported_data_df[
-                        "Lower Bound $"
+                    imported_data_df[LOWER_BOUND_EFF][i] = imported_data_df[
+                        LOWER_BOUND_DOLLAR
                     ][i]
                 elif not lb_calc_null and lb_dollar_null:
-                    imported_data_df["Lower Bound Eff"][i] = imported_data_df[
-                        "Lower Bound calc"
+                    imported_data_df[LOWER_BOUND_EFF][i] = imported_data_df[
+                        LOWER_BOUND_CALC
                     ][i]
                 else:
                     # In case both calculated and absolute dollar values
                     # are present, take the maximum
-                    imported_data_df["Lower Bound Eff"][i] = imported_data_df[
-                        "Lower Bound calc"
+                    imported_data_df[LOWER_BOUND_EFF][i] = imported_data_df[
+                        LOWER_BOUND_CALC
                     ][i]
 
-                imported_data_df["Lower Bound $"][i] = imported_data_df[
-                    "Lower Bound Eff"
+                imported_data_df[LOWER_BOUND_DOLLAR][i] = imported_data_df[
+                    LOWER_BOUND_EFF
                 ][i]
 
         # Initialize effective upper bounds equal to base spends
-        imported_data_df["Upper Bound Eff"] = imported_data_df["spend"].astype(float)
+        imported_data_df[UPPER_BOUND_EFF] = imported_data_df["spend"].astype(float)
 
         for i in range(0, len(imported_data_df)):
-            ub_calc_null = pd.isna(imported_data_df["Upper Bound calc"][i])
-            ub_dollar_null = pd.isna(imported_data_df["Upper Bound $"][i])
+            ub_calc_null = pd.isna(imported_data_df[UPPER_BOUND_CALC][i])
+            ub_dollar_null = pd.isna(imported_data_df[UPPER_BOUND_DOLLAR][i])
 
             if ub_calc_null and ub_dollar_null:
-                imported_data_df["Upper Bound Eff"][i] = imported_data_df["spend"][i]
+                imported_data_df[UPPER_BOUND_EFF][i] = imported_data_df["spend"][i]
             elif ub_calc_null and not ub_dollar_null:
-                imported_data_df["Upper Bound Eff"][i] = imported_data_df[
-                    "Upper Bound $"
+                imported_data_df[UPPER_BOUND_EFF][i] = imported_data_df[
+                    UPPER_BOUND_DOLLAR
                 ][i]
             elif not ub_calc_null and ub_dollar_null:
-                imported_data_df["Upper Bound Eff"][i] = imported_data_df[
-                    "Upper Bound calc"
+                imported_data_df[UPPER_BOUND_EFF][i] = imported_data_df[
+                    UPPER_BOUND_CALC
                 ][i]
             else:
                 # In case both calculated and absolute dollar values
                 # are present, take the minimum
-                imported_data_df["Upper Bound Eff"][i] = imported_data_df[
-                    "Upper Bound calc"
+                imported_data_df[UPPER_BOUND_EFF][i] = imported_data_df[
+                    UPPER_BOUND_CALC
                 ][i]
-            imported_data_df["Upper Bound $"][i] = imported_data_df["Upper Bound Eff"][
+            imported_data_df[UPPER_BOUND_DOLLAR][i] = imported_data_df[UPPER_BOUND_EFF][
                 i
             ]
 
         imported_data_df["optimization_scenario_id"] = int(scenario_id)
         imported_data_df["period_type"] = period_type
         imported_data_df.drop(
-            columns=["Lower Bound calc", "Upper Bound calc"], inplace=True
+            columns=[LOWER_BOUND_CALC, UPPER_BOUND_CALC], inplace=True
         )
 
         # get variable node mapping
 
         variable_df = pd.read_sql_query(
-            "select variable_id, variable_name from variable_node_mapping ",
+            SQL_SELECT_VARIABLES,
             self.conn_without_factory,
         )
         # base spends to be overriden by base scenario when not new allocation
@@ -584,11 +603,11 @@ class OptimizationHandler(object):
         )
         imported_data_df = imported_data_df.rename(columns={"base_spend": "spend"})
         if optimization_type_id != 4:
-            lower_sum = round(imported_data_df["Lower Bound $"].sum(), 0)
+            lower_sum = round(imported_data_df[LOWER_BOUND_DOLLAR].sum(), 0)
         else:
             lower_sum = round(imported_data_df["spend"].sum(), 0)
-        
-        upper_sum = round(imported_data_df["Upper Bound $"].sum(), 0)
+
+        upper_sum = round(imported_data_df[UPPER_BOUND_DOLLAR].sum(), 0)
 
         if optimization_type_id == 3:
             base_sum = round(imported_data_df["spend"].sum(), 0)
@@ -601,45 +620,35 @@ class OptimizationHandler(object):
             base_sum,
         )
 
-    def save_individual_spend_bounds_for_opt_scenario(
-        self, optimization_scenario_id, request_data
-    ):
+    def prepare_initial_data(self, optimization_scenario_id, request_data):
         result = pd.DataFrame.from_records(
             self.get_individual_basespends(
                 optimization_scenario_id, request_data["period_type"]
+                )
             )
-        )
         result["lock"] = "Yes"
-        result["Lower Bound %"] = ""
-        result["Upper Bound %"] = ""
-        result["Lower Bound $"] = np.floor(result["spend"])
-        result["Upper Bound $"] = result["spend"]
-        result["Lower Bound Eff"] = np.floor(result["spend"])
-        result["Upper Bound Eff"] = result["spend"]
+        result[LOWER_BOUND_PERCENT] = ""
+        result[UPPER_BOUND_PERCENT] = ""
+        result[LOWER_BOUND_DOLLAR] = np.floor(result["spend"])
+        result[UPPER_BOUND_DOLLAR] = result["spend"]
+        result[LOWER_BOUND_EFF] = np.floor(result["spend"])
+        result[UPPER_BOUND_EFF] = result["spend"]
         result["optimization_scenario_id"] = optimization_scenario_id
         result["period_type"] = request_data["period_type"]
+        return result
 
-        # get variable node mapping
-
-        variable_df = pd.read_sql_query(
-            "select variable_id,variable_name from variable_node_mapping ",
+    def fetch_variable_mapping(self):
+        return pd.read_sql_query(
+            SQL_SELECT_VARIABLES,
             self.conn_without_factory,
-        )
+            )
 
-        results = pd.merge(result, variable_df, on="variable_name")
-
-        results.rename(
-            columns={"Lower Bound Eff": "lowerbound", "Upper Bound Eff": "upperbound"},
-            inplace=True,
-        )
-        # Delete existing spend bounds for current scenario
-        # transaction =self.db_conn.conn.begin()
+    def delete_existing_spend_bounds(self, optimization_scenario_id):
         self.optimization_dao.delete_existing_individual_spend_bounds(
             int(optimization_scenario_id)
-        )
-        # transaction.commit()
-        # self.db_conn.conn.close()
-        # Insert spend bound for current scenario
+            )
+
+    def insert_new_spend_bounds(self, results):
         results = results.rename(columns={"spend": "base_spend"})
         UtilsHandler().insert_dataframe_to_mssql(
             results[
@@ -652,14 +661,13 @@ class OptimizationHandler(object):
                     "lowerbound",
                     "upperbound",
                     "base_spend",
-                ]
-            ],
+                    ]
+                ],
             "individual_spend_bounds",
-        )
-        results = results.rename(columns={"base_spend": "spend"})
-        print(self.optimization_dao.fetch_base_scenario(optimization_scenario_id))
-        # results[['optimization_scenario_id', 'variable_id', 'lock', 'period', 'lowerbound', 'upperbound']].to_sql(
-        #    name = 'individual_spend_bounds', con = self.conn_without_factory, if_exists = 'append', index = False)
+            )
+        return results.rename(columns={"base_spend": "spend"})
+
+    def filter_and_aggregate_data(self, result, request_data):
         result["lock"] = 1
         result_filtered = result[
             (~result["variable_name"].str.contains("_FLAGS_"))
@@ -684,19 +692,128 @@ class OptimizationHandler(object):
             on=["variable_name", "variable_description"],
             how="left",
         )
-
-        result_filtered = merged_df.sort_values(
+        return merged_df.sort_values(
             by=["variable_category", "spend_agg"], ascending=[True, False]
         ).reset_index(drop=True)
-        # response= {}
-        lower_bound_sum = round(result_filtered["Lower Bound $"].sum(), 0)
-        upper_bound_sum = round(result_filtered["Upper Bound $"].sum(), 0)
+
+    def compute_results_and_summaries(self, result_filtered):
+        lower_bound_sum = round(result_filtered[LOWER_BOUND_DOLLAR].sum(), 0)
+        upper_bound_sum = round(result_filtered[UPPER_BOUND_DOLLAR].sum(), 0)
         base_spend_sum = round(result_filtered["spend"].sum(), 0)
         results = result_filtered.fillna("").to_dict("records")
-        # response["lower_bound_sum"]=lower_bound_sum
-        # response["upper_bound_sum"]=upper_bound_sum
-        # response["results"]=results
         return results, upper_bound_sum, lower_bound_sum, base_spend_sum
+
+    def save_individual_spend_bounds_for_opt_scenario(
+        self, optimization_scenario_id, request_data
+    ):
+        result = self.prepare_initial_data(optimization_scenario_id, request_data)
+        variable_df = self.fetch_variable_mapping()
+        results = pd.merge(result, variable_df, on="variable_name")
+        results.rename(
+            columns={LOWER_BOUND_EFF: "lowerbound", UPPER_BOUND_EFF: "upperbound"},
+            inplace=True,
+            )
+        self.delete_existing_spend_bounds(optimization_scenario_id)
+        results = self.insert_new_spend_bounds(results)
+        result_filtered = self.filter_and_aggregate_data(result, request_data)
+        return self.compute_results_and_summaries(result_filtered)
+
+    # def save_individual_spend_bounds_for_opt_scenario(
+    #     self, optimization_scenario_id, request_data
+    # ):
+    #     result = pd.DataFrame.from_records(
+    #         self.get_individual_basespends(
+    #             optimization_scenario_id, request_data["period_type"]
+    #         )
+    #     )
+    #     result["lock"] = "Yes"
+    #     result[LOWER_BOUND_PERCENT] = ""
+    #     result[UPPER_BOUND_PERCENT] = ""
+    #     result[LOWER_BOUND_DOLLAR] = np.floor(result["spend"])
+    #     result[UPPER_BOUND_DOLLAR] = result["spend"]
+    #     result[LOWER_BOUND_EFF] = np.floor(result["spend"])
+    #     result[UPPER_BOUND_EFF] = result["spend"]
+    #     result["optimization_scenario_id"] = optimization_scenario_id
+    #     result["period_type"] = request_data["period_type"]
+
+    #     # get variable node mapping
+
+    #     variable_df = pd.read_sql_query(
+    #         SQL_SELECT_VARIABLES,
+    #         self.conn_without_factory,
+    #     )
+
+    #     results = pd.merge(result, variable_df, on="variable_name")
+
+    #     results.rename(
+    #         columns={LOWER_BOUND_EFF: "lowerbound", UPPER_BOUND_EFF: "upperbound"},
+    #         inplace=True,
+    #     )
+    #     # Delete existing spend bounds for current scenario
+    #     # transaction =self.db_conn.conn.begin()
+    #     self.optimization_dao.delete_existing_individual_spend_bounds(
+    #         int(optimization_scenario_id)
+    #     )
+    #     # transaction.commit()
+    #     # self.db_conn.conn.close()
+    #     # Insert spend bound for current scenario
+    #     results = results.rename(columns={"spend": "base_spend"})
+    #     UtilsHandler().insert_dataframe_to_mssql(
+    #         results[
+    #             [
+    #                 "optimization_scenario_id",
+    #                 "variable_id",
+    #                 "lock",
+    #                 "period",
+    #                 "period_type",
+    #                 "lowerbound",
+    #                 "upperbound",
+    #                 "base_spend",
+    #             ]
+    #         ],
+    #         "individual_spend_bounds",
+    #     )
+    #     results = results.rename(columns={"base_spend": "spend"})
+    #     print(self.optimization_dao.fetch_base_scenario(optimization_scenario_id))
+    #     # results[['optimization_scenario_id', 'variable_id', 'lock', 'period', 'lowerbound', 'upperbound']].to_sql(
+    #     #    name = 'individual_spend_bounds', con = self.conn_without_factory, if_exists = 'append', index = False)
+    #     result["lock"] = 1
+    #     result_filtered = result[
+    #         (~result["variable_name"].str.contains("_FLAGS_"))
+    #         & (result["variable_name"].str.startswith("M_"))
+    #     ].reset_index(drop=True)
+    #     period_start = int(request_data["period_start"])
+    #     period_end = int(request_data["period_end"])
+    #     result_filtered = result_filtered[
+    #         (result_filtered["period"] >= period_start)
+    #         & (result_filtered["period"] <= period_end)
+    #     ]
+    #     result_df = (
+    #         result_filtered.groupby(["variable_name", "variable_description"])
+    #         .agg({"spend": "sum"})
+    #         .reset_index()
+    #     )
+    #     result_df_sorted = result_df.sort_values(by="spend", ascending=False)
+    #     result_df_sorted.rename(columns={"spend": "spend_agg"}, inplace=True)
+    #     merged_df = pd.merge(
+    #         result_filtered,
+    #         result_df_sorted[["variable_name", "variable_description", "spend_agg"]],
+    #         on=["variable_name", "variable_description"],
+    #         how="left",
+    #     )
+
+    #     result_filtered = merged_df.sort_values(
+    #         by=["variable_category", "spend_agg"], ascending=[True, False]
+    #     ).reset_index(drop=True)
+    #     # response= {}
+    #     lower_bound_sum = round(result_filtered[LOWER_BOUND_DOLLAR].sum(), 0)
+    #     upper_bound_sum = round(result_filtered[UPPER_BOUND_DOLLAR].sum(), 0)
+    #     base_spend_sum = round(result_filtered["spend"].sum(), 0)
+    #     results = result_filtered.fillna("").to_dict("records")
+    #     # response["lower_bound_sum"]=lower_bound_sum
+    #     # response["upper_bound_sum"]=upper_bound_sum
+    #     # response["results"]=results
+    #     return results, upper_bound_sum, lower_bound_sum, base_spend_sum
 
     def update_individual_spend_bounds(self, request):
         # Get the optimization type
@@ -706,56 +823,56 @@ class OptimizationHandler(object):
         optimization_type_id = optimization_type[0]["optimization_type_id"]
         if optimization_type_id == 4:
             request["base_spend"] = int(request["spend"])
-            request["Lower Bound Eff"] = request[
+            request[LOWER_BOUND_EFF] = request[
                 "spend"
             ]  # In case of incremental, effective lower bound will not change
-        elif request["Lower Bound %"] != "" and request["Lower Bound $"] != "":
-            request["Lower Bound calc"] = np.floor(
-                int(request["spend"]) * (100 + int(request["Lower Bound %"])) / 100
+        elif request[LOWER_BOUND_PERCENT] != "" and request[LOWER_BOUND_DOLLAR] != "":
+            request[LOWER_BOUND_CALC] = np.floor(
+                int(request["spend"]) * (100 + int(request[LOWER_BOUND_PERCENT])) / 100
             )
-            request["Lower Bound Eff"] = np.floor(request["Lower Bound calc"])
-        elif request["Lower Bound %"] == "" and request["Lower Bound $"] != "":
-            request["Lower Bound Eff"] = int(request["Lower Bound $"])
+            request[LOWER_BOUND_EFF] = np.floor(request[LOWER_BOUND_CALC])
+        elif request[LOWER_BOUND_PERCENT] == "" and request[LOWER_BOUND_DOLLAR] != "":
+            request[LOWER_BOUND_EFF] = int(request[LOWER_BOUND_DOLLAR])
         else:
-            request["Lower Bound Eff"] = np.floor(
-                int(request["spend"]) * (100 + int(request["Lower Bound %"])) / 100
+            request[LOWER_BOUND_EFF] = np.floor(
+                int(request["spend"]) * (100 + int(request[LOWER_BOUND_PERCENT])) / 100
             )
 
-        if request["Upper Bound %"] != "" and request["Upper Bound $"] != "":
-            request["Upper Bound calc"] = (
-                int(request["spend"]) * (100 + int(request["Upper Bound %"])) / 100
+        if request[UPPER_BOUND_PERCENT] != "" and request[UPPER_BOUND_DOLLAR] != "":
+            request[UPPER_BOUND_CALC] = (
+                int(request["spend"]) * (100 + int(request[UPPER_BOUND_PERCENT])) / 100
             )
-            request["Upper Bound Eff"] = request["Upper Bound calc"]
-        elif request["Upper Bound %"] == "" and request["Upper Bound $"] != "":
-            request["Upper Bound Eff"] = int(request["Upper Bound $"])
+            request[UPPER_BOUND_EFF] = request[UPPER_BOUND_CALC]
+        elif request[UPPER_BOUND_PERCENT] == "" and request[UPPER_BOUND_DOLLAR] != "":
+            request[UPPER_BOUND_EFF] = int(request[UPPER_BOUND_DOLLAR])
         else:
-            request["Upper Bound Eff"] = (
-                request["spend"] * (100 + int(request["Upper Bound %"])) / 100
+            request[UPPER_BOUND_EFF] = (
+                request["spend"] * (100 + int(request[UPPER_BOUND_PERCENT])) / 100
             )
-        request["Upper Bound $"] = request["Upper Bound Eff"]
-        request["Lower Bound $"] = request["Lower Bound Eff"]
+        request[UPPER_BOUND_DOLLAR] = request[UPPER_BOUND_EFF]
+        request[LOWER_BOUND_DOLLAR] = request[LOWER_BOUND_EFF]
         imported_data_df = pd.DataFrame.from_records([request])
 
         # get variable node mapping
 
         variable_df = pd.read_sql_query(
-            "select variable_id,variable_name from variable_node_mapping ",
+            SQL_SELECT_VARIABLES,
             self.conn_without_factory,
         )
         bounds = []
         results = pd.merge(imported_data_df, variable_df, on="variable_name")
         for index, row in results.iterrows():
             if row["lock"] == 1:
-                row["Upper Bound $"] = int(request["spend"])
-                row["Upper Bound Eff"] = row["Upper Bound $"]
-                row["Lower Bound $"] = int(request["spend"])
-                row["Lower Bound Eff"] = row["Lower Bound $"]
-                request["Upper Bound $"] = int(request["spend"])
-                request["Upper Bound Eff"] = request["Upper Bound $"]
-                request["Lower Bound $"] = int(request["spend"])
-                request["Lower Bound Eff"] = request["Lower Bound $"]
-                request["Upper Bound %"] = ""
-                request["Lower Bound %"] = ""
+                row[UPPER_BOUND_DOLLAR] = int(request["spend"])
+                row[UPPER_BOUND_EFF] = row[UPPER_BOUND_DOLLAR]
+                row[LOWER_BOUND_DOLLAR] = int(request["spend"])
+                row[LOWER_BOUND_EFF] = row[LOWER_BOUND_DOLLAR]
+                request[UPPER_BOUND_DOLLAR] = int(request["spend"])
+                request[UPPER_BOUND_EFF] = request[UPPER_BOUND_DOLLAR]
+                request[LOWER_BOUND_DOLLAR] = int(request["spend"])
+                request[LOWER_BOUND_EFF] = request[LOWER_BOUND_DOLLAR]
+                request[UPPER_BOUND_PERCENT] = ""
+                request[LOWER_BOUND_PERCENT] = ""
                 row["lock"] = "Yes"
             else:
                 row["lock"] = "No"
@@ -763,24 +880,24 @@ class OptimizationHandler(object):
             res = self.optimization_dao.get_individual_spend_bounds_value(row)
             if (
                 optimization_type_id == 3
-                and (request["Upper Bound $"] == int(round(res[0]["base_spend"], 0)))
-                or (request["Upper Bound $"] + 1 == int(round(res[0]["base_spend"], 0)))
-                or (request["Upper Bound $"] - 1 == int(round(res[0]["base_spend"], 0)))
+                and (request[UPPER_BOUND_DOLLAR] == int(round(res[0]["base_spend"], 0)))
+                or (request[UPPER_BOUND_DOLLAR] + 1 == int(round(res[0]["base_spend"], 0)))
+                or (request[UPPER_BOUND_DOLLAR] - 1 == int(round(res[0]["base_spend"], 0)))
             ):
-                request["Upper Bound $"] = int(request["spend"])
-                request["Upper Bound Eff"] = request["Upper Bound $"]
-                row["Upper Bound $"] = int(request["spend"])
-                row["Upper Bound Eff"] = row["Upper Bound $"]
+                request[UPPER_BOUND_DOLLAR] = int(request["spend"])
+                request[UPPER_BOUND_EFF] = request[UPPER_BOUND_DOLLAR]
+                row[UPPER_BOUND_DOLLAR] = int(request["spend"])
+                row[UPPER_BOUND_EFF] = row[UPPER_BOUND_DOLLAR]
             if (
                 optimization_type_id == 3
-                and (request["Lower Bound $"] == int(round(res[0]["base_spend"], 0)))
-                or (request["Lower Bound $"] + 1 == int(round(res[0]["base_spend"], 0)))
-                or (request["Lower Bound $"] - 1 == int(round(res[0]["base_spend"], 0)))
+                and (request[LOWER_BOUND_DOLLAR] == int(round(res[0]["base_spend"], 0)))
+                or (request[LOWER_BOUND_DOLLAR] + 1 == int(round(res[0]["base_spend"], 0)))
+                or (request[LOWER_BOUND_DOLLAR] - 1 == int(round(res[0]["base_spend"], 0)))
             ):
-                request["Lower Bound $"] = int(request["spend"])
-                request["Lower Bound Eff"] = request["Lower Bound $"]
-                row["Lower Bound $"] = int(request["spend"])
-                row["Lower Bound Eff"] = row["Lower Bound $"]
+                request[LOWER_BOUND_DOLLAR] = int(request["spend"])
+                request[LOWER_BOUND_EFF] = request[LOWER_BOUND_DOLLAR]
+                row[LOWER_BOUND_DOLLAR] = int(request["spend"])
+                row[LOWER_BOUND_EFF] = row[LOWER_BOUND_DOLLAR]
             if len(res) != 0:
                 bounds.append(res[0])
             transaction.commit()
@@ -899,7 +1016,7 @@ class OptimizationHandler(object):
             spend_data["Q1"] + spend_data["Q2"] + spend_data["Q3"] + spend_data["Q4"]
         )
         final_spend = pd.merge(
-            variable_df, spend_data, right_on="Variable Name", left_on="variable_name"
+            variable_df, spend_data, right_on=COLUMN_VARIABLE_NAME, left_on="variable_name"
         )
         return final_spend.to_dict("records")
 
@@ -949,7 +1066,7 @@ class OptimizationHandler(object):
                 base_simulated_spend["geo"] = "US"
                 base_simulated_spend["period_type"] = "quarterly"
                 base_simulated_spend.rename(
-                    columns={"Variable Name": "node_name"}, inplace=True
+                    columns={COLUMN_VARIABLE_NAME: "node_name"}, inplace=True
                 )
 
                 logger.info("Running whatif")
@@ -996,7 +1113,7 @@ class OptimizationHandler(object):
                 ].astype("str")
                 base_spend_plan = pd.pivot_table(
                     base_spend_plan,
-                    index=["Variable Name", "Variable Description"],
+                    index=[COLUMN_VARIABLE_NAME, COLUMN_VARIABLE_DESCRIPTION],
                     columns="period_name",
                     values="spend_value",
                 ).reset_index()
@@ -1017,10 +1134,10 @@ class OptimizationHandler(object):
 
                 return {"id": scenario_id, "name": scenario_name}
             else:
-                logger.info("Scenario already exist, Please enter new scenario name")
+                logger.info(SCENARIO_EXISTS_MESSAGE)
                 return {
                     "status": 303,
-                    "message": "Scenario already exist, Please enter new scenario name",
+                    "message": SCENARIO_EXISTS_MESSAGE,
                 }
 
         except Exception as e:
@@ -1043,12 +1160,12 @@ class OptimizationHandler(object):
             )
         )
         rename_map = {
-            "variable_name": "Variable Name",
-            "Variable_Name": "Variable Name",
-            "Variable_Category": "Variable Category",
-            "variable_category": "Variable Category",
-            "Variable_Description": "Variable Description",
-            "variable_description": "Variable Description",
+            "variable_name": COLUMN_VARIABLE_NAME,
+            "Variable_Name": COLUMN_VARIABLE_NAME,
+            "Variable_Category": VARIABLE_CATEGORY,
+            "variable_category": VARIABLE_CATEGORY,
+            "Variable_Description": COLUMN_VARIABLE_DESCRIPTION,
+            "variable_description": COLUMN_VARIABLE_DESCRIPTION,
             "period": "Period",
         }
 
@@ -1074,10 +1191,10 @@ class OptimizationHandler(object):
             base_scenario.pivot_table(
                 columns="Period",
                 values="spend_value",
-                index=["Variable Name", "Variable Category", "Variable Description"],
+                index=[COLUMN_VARIABLE_NAME, VARIABLE_CATEGORY, COLUMN_VARIABLE_DESCRIPTION],
             )
             .reset_index()
-            .set_index("Variable Name")
+            .set_index(COLUMN_VARIABLE_NAME)
         )
         print("base scenario\n", base_scenario)
         base_scenario["Total"] = base_scenario.loc[
@@ -1099,43 +1216,43 @@ class OptimizationHandler(object):
         )
         var_bounds = var_bounds.rename(
             columns={
-                "variable_name": "Variable Name",
-                "Variable_Name": "Variable Name",
-                "variable_category": "Variable Category",
-                "Variable_Category": "Variable Category",
-                "variable_description": "Variable Description",
-                "Variable_Description": "Variable Description",
+                "variable_name": COLUMN_VARIABLE_NAME,
+                "Variable_Name": COLUMN_VARIABLE_NAME,
+                "variable_category": VARIABLE_CATEGORY,
+                "Variable_Category": VARIABLE_CATEGORY,
+                "variable_description": COLUMN_VARIABLE_DESCRIPTION,
+                "Variable_Description": COLUMN_VARIABLE_DESCRIPTION,
                 "period": "Period",
                 "lock": "Lock",
-                "base_scenario": "Base Scenario",
-                "Base_Scenario": "Base Scenario",
-                "upper_bound": "Upper Bound",
-                "Upper_Bound": "Upper Bound",
-                "lower_bound": "Lower Bound",
-                "Lower_Bound": "Lower Bound",
+                "base_scenario": BASE_SCENARIO,
+                "Base_Scenario": BASE_SCENARIO,
+                "upper_bound": UPPER_BOUND ,
+                "Upper_Bound": UPPER_BOUND,
+                "lower_bound": LOWER_BOUND,
+                "Lower_Bound": LOWER_BOUND,
             }
         )
 
         mask = (var_bounds["Period"] < main_input["period_start"]) | (
             var_bounds["Period"] > main_input["period_end"]
         )
-        var_bounds.loc[mask, "Base Scenario"] = 0
+        var_bounds.loc[mask, BASE_SCENARIO] = 0
         if main_input["period_type"] == "quarter":
             var_bounds["Period"] = "Q" + var_bounds["Period"].astype(str)
         elif main_input["period_type"] == "month":
             var_bounds["Period"] = var_bounds["Period"].map(
                 {idx + 1: mon for idx, mon in enumerate(MONTHS)}
             )
-        var_bounds = var_bounds.set_index(["Variable Name", "Period"])
+        var_bounds = var_bounds.set_index([COLUMN_VARIABLE_NAME, "Period"])
         cond = var_bounds["Lock"] == "Yes"
         if np.any(cond):
             # var_bounds.loc[cond, ['Lower Bound (%)', 'Upper Bound (%)']] = 0
-            var_bounds.loc[cond, ["Lower Bound", "Upper Bound"]] = var_bounds.loc[
-                cond, "Base Scenario"
+            var_bounds.loc[cond, [LOWER_BOUND, UPPER_BOUND]] = var_bounds.loc[
+                cond, BASE_SCENARIO
             ]
 
         var_desc = pd.DataFrame(
-            base_scenario[["Variable Category", "Variable Description"]]
+            base_scenario[[VARIABLE_CATEGORY, COLUMN_VARIABLE_DESCRIPTION]]
         )
 
         var_groups = pd.DataFrame(self.optimization_dao.fetch_var_group())
@@ -1247,7 +1364,7 @@ class OptimizationHandler(object):
         inner join scenarios sc on sc.id = o.scenarioId
         where sc.id in ({scenario1},{scenario2}) ORDER BY CASE sc.id
         WHEN {scenario1} THEN 0
-        WHEN {scenario2} THEN 1 
+        WHEN {scenario2} THEN 1
         END """.format(
             scenario1=scenario1, scenario2=scenario2
         )
@@ -1661,20 +1778,20 @@ class OptimizationHandler(object):
         if len(optimal_spend) == 0:
             optimal_spend = pd.melt(
                 optimal_spend_plan,
-                id_vars=["Variable Name", "Variable Description"],
+                id_vars=[COLUMN_VARIABLE_NAME, COLUMN_VARIABLE_DESCRIPTION],
                 var_name=["period"],
                 value_name="spend",
             )
 
             variable_df = pd.read_sql_query(
-                "select variable_id,variable_name from variable_node_mapping ",
+                SQL_SELECT_VARIABLES,
                 self.conn_without_factory,
             )
 
             optimal_spend = pd.merge(
                 optimal_spend,
                 variable_df,
-                left_on="Variable Name",
+                left_on=COLUMN_VARIABLE_NAME,
                 right_on="variable_name",
             )
             optimal_spend["quarter"] = (

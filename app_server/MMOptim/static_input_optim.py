@@ -23,6 +23,8 @@ from app_server.MMOptim.utils.str_utils import (
 )
 from app_server.scenario_dao import ScenarioDAO
 
+WEEK_END_DATE_COL = "Week end Date"
+
 # %% Load Data
 db_conn = DatabaseHandler().get_database_conn()
 scenario_dao = ScenarioDAO(db_conn)
@@ -318,15 +320,15 @@ def get_static_input(disp=True):
     calendar = pd.DataFrame.from_records(calendardata)
     calendar.rename(
         columns={
-            "Week_end_Date": "Week end Date",
+            "Week_end_Date": WEEK_END_DATE_COL,
             "month": "MONTH",
             "year": "YEAR",
             "quarter": "QUARTER",
         },
         inplace=True,
     )
-    calendar["Week end Date"] = pd.to_datetime(
-        calendar["Week end Date"],
+    calendar[WEEK_END_DATE_COL] = pd.to_datetime(
+        calendar[WEEK_END_DATE_COL],
         infer_datetime_format=True,
         format="%d-%m-%Y",
     )

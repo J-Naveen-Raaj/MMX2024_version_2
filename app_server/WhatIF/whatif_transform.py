@@ -13,6 +13,8 @@ from app_server.MMOptim.config import WHATIF_YEAR
 from app_server.MMOptim.constants import DATE_COL, GEO_COL, MONTHS, SEG_COL
 from app_server.WhatIF.ad_stock_module import apply_adstock
 
+ORIGINAL_VARIABLE = "Original Variable"
+AD_STOCK_HALF_LIFE = "Ad-stock Half Life"
 
 # %%
 def format_spend_plan(simulated_spend):
@@ -127,17 +129,17 @@ def calculate_lag(mktg_data, lag_variables):
     for index, row in lag_variables.iterrows():
         # If half life is 0, then variable only has lag
         if row["lag"] == 0 or row["lag"] is None:
-            mktg_data[row["Original Variable"]] = mktg_data[
-                row["Original Variable"]
+            mktg_data[row[ORIGINAL_VARIABLE]] = mktg_data[
+                row[ORIGINAL_VARIABLE]
             ].values
             continue
 
         compiled_data = grouped_data.apply(
-            lambda x: lag_transform(x[row["Original Variable"]], row["lag"])
+            lambda x: lag_transform(x[row[ORIGINAL_VARIABLE]], row["lag"])
         ).reset_index()
         temp_df = compiled_data.explode(0).reset_index(drop=True)
 
-        mktg_data[row["Original Variable"]] = temp_df[0]
+        mktg_data[row[ORIGINAL_VARIABLE]] = temp_df[0]
     return mktg_data
 
 
@@ -155,8 +157,8 @@ def calculate_s_curve(mktg_data, s_curve_variables):
     for index, row in s_curve_variables.iterrows():
         # If scurve is None, then copy variable as it is
         if row["scurve"] is None or pd.isna(row["scurve"]):
-            mktg_data[row["Original Variable"]] = mktg_data[
-                row["Original Variable"]
+            mktg_data[row[ORIGINAL_VARIABLE]] = mktg_data[
+                row[ORIGINAL_VARIABLE]
             ].values
             continue
 
@@ -166,8 +168,8 @@ def calculate_s_curve(mktg_data, s_curve_variables):
         res = scurve_param_regex.match(row["scurve"])
         # if row['scurve'] == "Best alpha:No Best beta:No":
         if res is None or (res["alpha"] == "No" and res["beta"] == "No"):
-            mktg_data[row["Original Variable"]] = mktg_data[
-                row["Original Variable"]
+            mktg_data[row[ORIGINAL_VARIABLE]] = mktg_data[
+                row[ORIGINAL_VARIABLE]
             ].values
             continue
 
@@ -182,14 +184,14 @@ def calculate_s_curve(mktg_data, s_curve_variables):
             print("beta parameter not a number")
             raise
 
-        print(row["Original Variable"], alpha, beta)
+        print(row[ORIGINAL_VARIABLE], alpha, beta)
         compiled_data = grouped_data.apply(
             lambda x: s_curve_transform(
-                x[row["Original Variable"]].astype(np.float32), alpha, beta
+                x[row[ORIGINAL_VARIABLE]].astype(np.float32), alpha, beta
             )
         ).reset_index()
         temp_df = compiled_data.explode(0).reset_index(drop=True)
-        mktg_data[row["Original Variable"]] = temp_df[0]
+        mktg_data[row[ORIGINAL_VARIABLE]] = temp_df[0]
     return mktg_data
 
 
@@ -200,24 +202,24 @@ def calculate_adstock(mktg_data, ad_stock_variables):
     grouped_data = mktg_data.groupby(["X_SEG", "X_GEO"])
     for index, row in ad_stock_variables.iterrows():
         # If half life is 0, then variable has no adstock
-        if row["Ad-stock Half Life"] == 0 or row["Ad-stock Half Life"] is None:
-            mktg_data[row["Original Variable"]] = mktg_data[
-                row["Original Variable"]
+        if row[AD_STOCK_HALF_LIFE] == 0 or row[AD_STOCK_HALF_LIFE] is None:
+            mktg_data[row[ORIGINAL_VARIABLE]] = mktg_data[
+                row[ORIGINAL_VARIABLE]
             ].values
             continue
 
         compiled_data = grouped_data.apply(
             lambda x: apply_adstock(
-                x[row["Original Variable"]],
+                x[row[ORIGINAL_VARIABLE]],
                 4,
-                math.exp(math.log(0.5) / row["Ad-stock Half Life"]),
+                math.exp(math.log(0.5) / row[AD_STOCK_HALF_LIFE]),
             )
             # lambda x: ad_stock(
             #    x[row["Original Variable"]], row["Ad-stock Half Life"], 4
             # )
         ).reset_index()
         temp_df = compiled_data.explode(0).reset_index(drop=True)
-        mktg_data[row["Original Variable"]] = temp_df[0]
+        mktg_data[row[ORIGINAL_VARIABLE]] = temp_df[0]
     return mktg_data
 
 
