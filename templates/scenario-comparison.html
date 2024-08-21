@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="static/assets/images/favicon.png">
+    <title>Market Mix Optimization</title>
+    <!-- Custom CSS -->
+    <link href="static/dist/css/style.css" rel="stylesheet">
+    <link href="static/assets/node_modules/bootstrap-table/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link href="static/assets/node_modules/simple-tree-table/jquery-simple-tree-table.css" rel="stylesheet">
+    <link href="static/assets/node_modules/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
+
+    <link href="static/assets/node_modules/css-chart/css-chart.css" rel="stylesheet">
+    <!-- page css -->
+    <link href="static/dist/css/pages/tab-page.css" rel="stylesheet">
+    <link href="static/css/c3.css" rel="stylesheet" type="text/css">
+    <link href="static/css/custom.css" rel="stylesheet">
+    <link href="static/css/progress.css" rel="stylesheet">
+</head>
+
+<body class="horizontal-nav skin-blue client-page">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Market Mix Optimization</p>
+        </div>
+    </div>
+    <div class="preloader-progress">
+        <div class="loadingprogress">
+            <p class="m-l-5 mb-0">Loading ...</p>
+            <div class="loading-progress">
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar bluebg">
+            <div class="row">
+                <nav class="navbar top-navbar navbar-expand-md navbar-dark container">
+                    <!-- ============================================================== -->
+                    <!-- Logo -->
+                    <!-- ============================================================== -->
+                    <div class="col-2">
+                        <div class="navbar-header">
+                            <!-- <a href="/" class="navbar-brand-client">
+                                <img src="static/assets/images/rakuten_white_logo.png" alt="HomePage"
+                                    class="client-logo rakutenlogo" />
+                            </a> -->
+                            <a class="navbar-brand" href="/">
+                                <!-- Logo icon -->
+                                <b class="hidden-md-up">
+                                    <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                                    <!-- Dark Logo icon -->
+                                    <!-- <img src="static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" /> -->
+                                    <!-- Light Logo icon -->
+                                    <img src="static/assets/images/logo-light-icon.png" alt="homepage"
+                                        class="light-logo" />
+                                </b>
+                                <!--End Logo icon -->
+                                <!-- Logo text -->
+                                <span class="hidden-sm-down">
+                                    <!-- dark Logo text -->
+                                    <img src="static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                                    <!-- Light Logo text -->
+                                    <img src="static/assets/images/mmo_app_white.png" class="light-logo mmologo"
+                                        alt="homepage" />
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- End Logo -->
+                    <!-- ============================================================== -->
+
+                    <div class="col-2">
+
+                    </div>
+                    <div class="col-6">
+
+                        <ul class="navbar-nav my-lg-0">
+                            <!-- ============================================================== -->
+                            <!-- User Profile -->
+                            <!-- ============================================================== -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="reporting-allocation-actuals.html"><span class="">Historical
+                                        Reports</span> </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="scenarioanalysis.html"><span class="">Scenario
+                                        Planner</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="optimization.html"><span class="">Optimization</span> </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="scenario-comparison.html"><span class="">Scenario
+                                        Comparison</span>
+                                </a>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                    <div class="row col-2 timeperiod" id="timePeriodInfo">
+                    </div>
+                </nav>
+                <div class="nav-item  m-t-15 maintainceclass">
+                    <a class="nav-link p-0 m-0" href="maintenance.html"><span class=""><i class="fa fa-cogs"
+                                aria-hidden="true"></span></i></a>
+                </div>
+                <div class="nav-item glossary">
+                    <a class="nav-link" href="static/assets/Tiger Glossary .pdf" target="_blank" data-toggle="tooltip"
+                        title="Glossary"><span class=""><i class="fa fa-question-circle"></i></span></a>
+                </div>
+            </div>
+
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper shiftedtoTop">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <!-- ============================================================== -->
+            <div class="admin-menu-row upperbar">
+                <div class="menu-item col-10">
+                    <ul class="horizontal-menu nav">
+                        <li><a class="active outcome-comparison outcomeclass " style="margin-left:-11px"
+                                data-toggle="tab" href="#outcome_comparison">Outcome
+                                Comparison</a>
+                        </li>
+                        <!-- <li><a class="outcome-comparison" data-toggle="tab" href="#kpiOutputComparison">KPI
+                                Output Comparison</a>
+                        </li> -->
+                        <li><a class="outcome-comparison" data-toggle="tab" href="#duetoanalysis">Due to
+                                Analysis</a> </li>
+                        <!-- <li><a class="blue outcome-comparison" data-toggle="tab" href="#spendvsoutcome">Spend vs
+                                    Outcomes</a> </li> -->
+                    </ul>
+                </div>
+                <div class=" menu-item menu-item-right ml-5">
+                    <div class="downloadscenariobtn downloadoutcome ml-4">
+                        <a class="d-flex flex-row downloadscenario exceldownload" href="#" download-type="csv">
+                            <div class="m-r-5 m-t-5 download-excel-button"><i class="mmoicon-excel"></i></div>
+                            <div class="align-self-center">
+                                <div class="lh1 body-color">
+                                    Download Report
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="tab-content">
+                    <div id="outcome_comparison" class="tab-pane fade in active show soctableclass">
+                        <div class="admin-menu-row topadminrow borderclass">
+                            <div class="row col-12">
+                                <div class="menu-item d-sm-block pl-0 col-5">
+                                    <div style="margin-bottom: 13px;">
+                                        <span class="d-inlineblock mrxs"><b>Compare Metrics</b></span>
+                                    </div>
+                                </div>
+                                <div class="menu-item scenario-form">
+                                    <div class="menu-sub-item" style="margin-bottom: 13px;">
+                                        <span class="mrxs"><b>Compare Scenarios</b></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-12">
+                                <div class="menu-item d-sm-block pl-0 col-5">
+                                    <div>
+                                        <span class="grey"><b>Metrics</b></span>
+                                    </div>
+                                </div>
+                                <div class="menu-item scenario-form col-2">
+                                    <div class="menu-sub-item">
+                                        <span class="grey"><b>Scenario1</b></span>
+                                    </div>
+                                </div>
+                                <div class="menu-item scenario-form">
+                                    <div class="menu-sub-item">
+                                        <span class="grey"><b>Scenario2</b></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="menu-sub-item col-5 pl-0 pr-0 m-t-5">
+                                <form class="horizontal-menu">
+                                    <span class="pr-2">
+                                        <label class="labeloutcome">
+                                            <input type="radio" id="overallchange" name="metric" value="Overall-Change"
+                                                class="metricLink">
+                                            Overall Change
+                                        </label>
+                                    </span>
+                                    <span class="pr-2">
+                                        <label class="labeloutcome">
+                                            <input type="radio" id="outcome1" name="metric" value="outcome1"
+                                                class="metricLink">
+                                            outcome1
+                                        </label>
+                                    </span>
+                                    <span class="pr-2">
+                                        <label class="labeloutcome">
+                                            <input type="radio" id="outcome2" name="metric" value="outcome2"
+                                                class="metricLink">
+                                            outcome2
+                                        </label>
+                                    </span>
+                                </form>
+                            </div>
+
+                            <form id="comparescenario_form" class="">
+                                <div class="menu-item scenario-form">
+                                    <div class="menu-sub-item m-l-10 selection">
+                                        <select class="selectpicker compareselectBox" data-live-search="true"
+                                            data-placeholder="Search..." data-style="form-control outline-style"
+                                            id="selectscnrio_two">
+                                            <option>Scenario 1</option>
+                                            <option>Scenario 2</option>
+                                            <option>Scenario 3</option>
+                                            <option>Scenario 4</option>
+                                        </select>
+                                    </div>
+                                    <div class="menu-sub-item selection">
+                                        <select class="selectpicker compareselectBox"
+                                            data-style="form-control outline-style" data-live-search="true"
+                                            data-placeholder="Search..." id="selectscnrio_one">
+                                            <option>Scenario 1</option>
+                                            <option>Scenario 2</option>
+                                            <option>Scenario 3</option>
+                                            <option>Scenario 4</option>
+                                        </select>
+                                    </div>
+                                    <div class="menu-sub-item">
+                                        <a href="#"
+                                            class="btn waves-effect waves-light btn-rounded button-green compareBtn"
+                                            id="">COMPARE</a>
+                                    </div>
+
+                                </div>
+                            </form>
+                            <!-- <div class="menu-item menu-item-right menu-item-sm-left">
+                                <div class="menu-item addscenariobtn">
+                                    <a class="d-flex flex-row addscenario" href="#" data-toggle="modal"
+                                        data-target="#addscenario" id="addscenarioidBtn">
+                                        <div class="round align-self-center round-blue"><i class="ti-plus"></i>
+                                        </div>
+                                        <div class="m-l-5 align-self-center">
+                                            <div class="lh1 text-small body-color">
+                                                More scenarios<br>
+                                                to download
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div> -->
+                            <div class="col-12 admin-menu-row admin-menu-row-minheight-md pl-0"
+                                id="Compare-metricTxtBox">
+                                <div class="row col-12">
+                                    <div class="menu-sub-item">
+                                        <span class="grey">Occurrence</span>
+                                    </div>
+                                </div>
+                                <div class="col-8 pl-0">
+                                    <div class="menu-item">
+                                        <div class="menu-sub-item">
+                                            <select class="selectpicker" data-style="outline-style light-select"
+                                                id="period_type">
+                                                <option value="year">Yearly</option>
+                                                <option value="quarter">Quarterly</option>
+                                                <option value="month">Monthly</option>
+                                            </select>
+                                        </div>
+                                        <div class="menu-sub-item quarterddl-item pr-3" style="display:none;">
+                                            <select class="selectpicker" data-style="outline-style light-select"
+                                                id="quarterddl7">
+                                                <option value="Q1" selected>Q1</option>
+                                                <option value="Q2">Q2</option>
+                                                <option value="Q3">Q3</option>
+                                                <option value="Q4">Q4</option>
+                                            </select>
+                                        </div>
+                                        <div class="menu-sub-item monthddl-item pr-3" style="display:none;">
+                                            <select class="selectpicker" data-style="outline-style light-select"
+                                                id="monthddl7">
+                                                <option value="Jan" selected>Jan</option>
+                                                <option value="Feb">Feb</option>
+                                                <option value="Mar">Mar</option>
+                                                <option value="Apr">Apr</option>
+                                                <option value="May">May</option>
+                                                <option value="Jun">Jun</option>
+                                                <option value="Jul">Jul</option>
+                                                <option value="Aug">Aug</option>
+                                                <option value="Sep">Sep</option>
+                                                <option value="Oct">Oct</option>
+                                                <option value="Nov">Nov</option>
+                                                <option value="Dec">Dec</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="menu-item menu-item-right inputscenario d-none d-sm-block p-l-5">
+                                    <a class="view-type toggle-btn" href="#graph">
+                                        <div class="m-l-5"><i class="fas fa-chart-line"></i>
+                                        </div>
+                                    </a>
+                                    <a class="view-type toggle-btn active" href="#tabular">
+                                        <div class="m-l-5"><i style="font-size:14px" class="fa fa-table"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="menu-item" id="touchpoints_ddl2" style="display:none">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="white">
+                                            <div class="btn-group select-box-wrapper">
+                                                <a href="javascript:void(0)" class="maindropdown p-t-10 p-b-10">
+                                                    <b style="color:#6c757d;font-size:14px;font-weight:bold;">Select
+                                                        Channels/Tactic <span class="ti-angle-down"></span></b></a>
+                                                <div class="dropdown-menu main-dropdown-menu">
+                                                    <div class="select-box" role="banner">
+                                                        <div class="d-flex flex-row">
+                                                            <div class="align-self-center">
+                                                                <div class="searchbox-wrapper">
+                                                                    <div class="input-group searchbox">
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="Search Touchpoint here"
+                                                                            aria-label="Search Touchpoint here"
+                                                                            id="geolevelsearchBox3">
+                                                                        <div class="input-group-append">
+                                                                            <span class="input-group-text">
+                                                                                <i class="ti-search"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <a href="#"
+                                                                    class="mtxss btn waves-effect waves-light btn-rounded button-blue"
+                                                                    id="compareBarChartapplyBtncompare">APPLY</a>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="nav comparison-main-content" role="navigation">
+                                                            <table id="dropdowntree2" class="table">
+                                                                <tbody class="ddl"></tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" id="comparesummaryHolder"></div>
+                        <div class="comparison-main-content">
+                            <div id="Compare-metricTblBox">
+                                <div class="table-responsive-lg hide-cols" id="table-container">
+                                    <table id="geolevel_Tbltree" class="table">
+                                        <thead class="treeDataHeader"></thead>
+                                        <tbody class="treeDatabody"></tbody>
+                                    </table>
+                                    <div id="show"></div>
+                                </div>
+                            </div>
+                            <div class="card-deck" id="Compare-graphs">
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div id="kpiOutputComparison" class="tab-pane fade">
+                        <div class="admin-menu-row topadminrow borderclass">
+                            <div class="menu-item row col-12">
+                                <div class="menu-sub-item">
+                                    <label class="mrxs">Compare Scenarios</label>
+                                </div>
+                            </div>
+                            <div class="row col-12 pl-0 m-b-5">
+                                <div class="menu-item scenario-form col-2">
+                                    <div class="menu-sub-item">
+                                        <span class="grey"><b>Scenario1</b></span>
+                                    </div>
+                                </div>
+                                <div class="menu-item scenario-form">
+                                    <div class="menu-sub-item">
+                                        <span class="grey"><b>Scenario2</b></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="menu-item row col-10">
+                                <div class="menu-sub-item selection">
+                                    <select class="selectpicker kpi_select_box" data-style="outline-style light-select"
+                                        id="opt_scenarios_1">
+                                    </select>
+                                </div>
+                                <div class="menu-sub-item selection">
+                                    <select class="selectpicker kpi_select_box" data-style="outline-style light-select"
+                                        id="opt_scenarios_2">
+                                    </select>
+                                </div>
+                                <div class="menu-sub-item">
+                                    <a href="#" class="btn waves-effect waves-light btn-rounded button-green"
+                                        id="kpi_comparison_btn">COMPARE</a>
+                                </div>
+                            </div>
+                            <div class="menu-item menu-item-right menu-item-sm-left">
+                                <div class="downloadscenariobtn sm-width-37">
+                                    <a class="d-flex flex-row download_kpi_output_comparison_file exceldownload"
+                                        href="#">
+                                        <div class="m-l-5 download-excel-button"><i
+                                                class="mmoicon-excel excelcompare"></i></div>
+                                        <div class="align-self-center">
+                                            <div class="lh1 text-small blue">
+                                                DownloadReport
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comparison-main-content">
+                            <div class="admin-menu-row pt-0 pl-0 pr-0" id="outcome_comparisons">
+                            </div>
+                        </div>
+                    </div>-->
+                    <div id="duetoanalysis" class="tab-pane fade">
+                        <div class="admin-menu-row topadminrow borderclass">
+                            <div class=" row col-12 m-b-5 menu-item scenario-form">
+                                <div class="col-6 mr-5"></div>
+                                <div class="col-5 m-l-20 menu-sub-item">
+                                    <span class="mrxs"><b>Compare Scenarios</b></span>
+                                </div>
+                            </div>
+                            <div class="row col-12 outcome-comparison">
+                                <div class="col-6 pl-0 m-b-5 mr-5">
+                                    <div class="menu-sub-item col-2 pl-0 m-r-20" style="display: inline-block;">
+                                        <span class="grey"><b>Occurrence</b></span>
+                                    </div>
+                                    <div class="menu-sub-item  col-2 m-r-20 scenariolabel "
+                                        style="display: inline-block;">
+                                        <span class="grey"><b>Scenario1</b></span>
+                                    </div>
+                                    <div class="menu-sub-item scenariolabel" style="display: inline-block;">
+                                        <span class="grey"><b>Scenario2</b></span>
+                                    </div>
+                                </div>
+                                <div class="row col-5 pl-0 m-b-5 m-l-30">
+                                    <div class="menu-item col-4 m-r-30 pl-0 scenario-form">
+                                        <div class="menu-sub-item ">
+                                            <span class="grey"><b>Scenario1</b></span>
+                                        </div>
+                                    </div>
+                                    <div class=" p-l-25 menu-item scenario-form">
+                                        <div class="menu-sub-item">
+                                            <span class="grey"><b>Scenario2</b></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-12  menu-item">
+                                <div class="row col-7 pr-0">
+                                    <div class="menu-item">
+                                        <div class="menu-sub-item pr-3">
+                                            <select class="selectpicker" data-style="outline-style light-select"
+                                                id="period_type1">
+                                                <option value="year" selected>Yearly</option>
+                                                <option value="quarter">Quarterly</option>
+                                                <option value="month">Monthly</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="menu-sub-item monthddl-item " style="display:none;">
+                                            <select class="selectpicker" data-style="outline-style light-select"
+                                                id="monthddl1">
+                                                <option value="Jan">Jan</option>
+                                                <option value="Feb">Feb</option>
+                                                <option value="Mar">Mar</option>
+                                                <option value="Apr">Apr</option>
+                                                <option value="May">May</option>
+                                                <option value="Jun">Jun</option>
+                                                <option value="Jul">Jul</option>
+                                                <option value="Aug">Aug</option>
+                                                <option value="Sep">Sep</option>
+                                                <option value="Oct">Oct</option>
+                                                <option value="Nov">Nov</option>
+                                                <option value="Dec">Dec</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="menu-sub-item quarterddl-item" style="display:none;">
+                                            <select class="selectpicker" data-style="outline-style light-select"
+                                                id="quarterddl1">
+                                                <option value="Q1">Q1</option>
+                                                <option value="Q2">Q2</option>
+                                                <option value="Q3">Q3</option>
+                                                <option value="Q4">Q4</option>
+                                            </select>
+                                        </div>
+                                        <div class="menu-sub-item monthddl-item pr-3" style="display:none;">
+                                            <select class="selectpicker" data-style="outline-style light-select"
+                                                id="monthddl2">
+                                                <option value="Jan">Jan</option>
+                                                <option value="Feb">Feb</option>
+                                                <option value="Mar">Mar</option>
+                                                <option value="Apr">Apr</option>
+                                                <option value="May">May</option>
+                                                <option value="Jun">Jun</option>
+                                                <option value="Jul">Jul</option>
+                                                <option value="Aug">Aug</option>
+                                                <option value="Sep">Sep</option>
+                                                <option value="Oct">Oct</option>
+                                                <option value="Nov">Nov</option>
+                                                <option value="Dec">Dec</option>
+                                            </select>
+                                        </div>
+                                        <div class="menu-sub-item quarterddl-item pr-3" style="display:none;">
+                                            <select class="selectpicker" data-style="outline-style light-select"
+                                                id="quarterddl2">
+                                                <option value="Q1">Q1</option>
+                                                <option value="Q2">Q2</option>
+                                                <option value="Q3">Q3</option>
+                                                <option value="Q4">Q4</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row col-5 pl-0">
+                                    <form id="comparescenario_form" class="">
+                                        <div class="menu-item scenario-form ">
+                                            <!-- <div class="menu-sub-item">
+                                                <span class=""><b>Compare Scenarios</b></span>
+                                            </div> -->
+                                            <div class="menu-sub-item selection">
+                                                <select class="selectpicker comparedueselectBox compareselectBox"
+                                                    data-style="form-control outline-style" id="selectscnrio_1"
+                                                    data-live-search="true" data-placeholder="Search...">
+                                                </select>
+                                            </div>
+                                            <div class="menu-sub-item selection">
+                                                <select class="selectpicker comparedueselectBox compareselectBox"
+                                                    data-style="form-control outline-style" id="selectscnrio_2"
+                                                    data-live-search="true" data-placeholder="Search...">
+                                                    <option>Scenario 1</option>
+                                                    <!-- <option>Scenario 2</option>
+                                                        <option>Scenario 3</option>
+                                                        <option>Scenario 4</option> -->
+                                                </select>
+                                            </div>
+                                            <div class="menu-sub-item">
+                                                <a href="#"
+                                                    class="btn waves-effect waves-light btn-rounded button-green compareBtn2"
+                                                    id="compareBtn2">COMPARE</a>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row col-12 pl-0 m-t-5">
+                                <div class=" col-6 sub-menu-item">
+                                    <!-- <div class="white">
+                                        <div class="">
+                                            <a href="" class=" p-t-10 p-b-10 ">
+                                                <b style="color:#6c757d">Select
+                                                    Channels/Tactic</b></a>
+                                        </div>
+                                    </div> -->
+                                    <b>Select Channels/Tactic </b>
+                                    <div class="menu-item nodeclass">
+                                        <div class="sub-menu-item pl-3 pr-3 btn-group select-box-wrapper">
+                                            <span id="node_name" style="width: 152px;">Audio
+                                                Podcast</span>
+                                            <a href="javascript:void(0)"
+                                                class="maindropdown touchpoints outcome-comparison m-t-5">
+                                                <span class="ti-angle-down "></span></a>
+
+                                            <div class="dropdown-menu main-dropdown-menu">
+                                                <div class="select-box" role="banner">
+
+                                                    <div class="d-flex flex-row">
+                                                        <div class="align-self-center">
+                                                            <div class="searchbox-wrapper">
+                                                                <div class="input-group searchbox">
+                                                                    <input type="text" class="form-control"
+                                                                        placeholder="Search Touchpoint here"
+                                                                        aria-label="Search Touchpoint here"
+                                                                        id="geolevelsearchBox">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">
+                                                                            <i class="ti-search"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <a href="#"
+                                                                class="mtxss btn waves-effect waves-light btn-rounded button-blue"
+                                                                id="duetoanalysisapplyBtn">APPLY</a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="nav comparison-main-content" role="navigation">
+                                                        <table id="geolevelmarginalreturn_Tbltree" class="table">
+                                                            <tbody class="treeDatabodyddl"></tbody>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="main-content">
+                            <div class="graph-boxes-wrapper" id="DueToAnalysisMainBox">
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- <div id="spendvsoutcome" class="tab-pane fade">
+                            <div class="admin-menu-row">
+                                <form id="comparescenario_form" class="">
+                                    <div class="menu-item scenario-form">
+                                        <div class="menu-sub-item">
+                                            <span class="blue"><b>Compare Scenarios</b></span>
+                                        </div>
+                                        <div class="menu-sub-item">
+                                            <select class="selectpicker compareselectBox"
+                                                data-style="form-control outline-style" id="selectscnrio_3">
+                                            </select>
+                                        </div>
+                                        <div class="menu-sub-item">
+                                            <select class="selectpicker compareselectBox"
+                                                data-style="form-control outline-style" id="selectscnrio_4">
+                                                <option>Scenario 1</option>
+                                            </select>
+                                        </div>
+                                        <div class="menu-sub-item">
+                                            <a href="#"
+                                                class="btn waves-effect waves-light btn-rounded button-green compareBtn"
+                                                id="compareBtn2">COMPARE</a>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="admin-menu-row bluebg white text-lead ">Period Selection</div>
+                            <div class="admin-menu-row  admin-menu-row-minheight-md">
+                                <div class="menu-item" id="touchpoints_ddl">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="white">
+                                                <div class="btn-group select-box-wrapper">
+                                                    <a href="javascript:void(0)"
+                                                        class="blue maindropdown p-t-10 p-b-10 touchpoints">Select
+                                                        Channels/Tactic <span class="blue ti-angle-down"></span></a>
+                                                    <div class="dropdown-menu main-dropdown-menu">
+                                                        <div class="select-box" role="banner">
+                                                            <div class="d-flex flex-row">
+                                                                <div class="align-self-center">
+                                                                    <div class="searchbox-wrapper">
+                                                                        <div class="input-group searchbox">
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder="Search Touchpoint here"
+                                                                                aria-label="Search Touchpoint here"
+                                                                                id="geolevelsearchBox2">
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-text">
+                                                                                    <i class="ti-search"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <a href="#"
+                                                                        class="mtxss btn waves-effect waves-light btn-rounded button-blue"
+                                                                        id="compareBarChartapplyBtn">APPLY</a>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="nav comparison-main-content" role="navigation">
+                                                                <table id="dropdowntree" class="table">
+                                                                    <tbody class="spendddl"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="menu-item">
+                                    <div class="menu-sub-item pr-3">
+                                        <h6 class="blue">Period Type</h6>
+                                        <select class="selectpicker" data-style="outline-style light-select"
+                                            id="period_type2">
+                                            <option value="year" selected>Yearly</option>
+                                            <option value="quarter">Quarterly</option>
+                                            <option value="month">Monthly</option>
+                                        </select>
+                                    </div>
+                                    <div class="menu-sub-item monthddl-item pr-3" style="display:none;">
+                                        <h6 class="blue">From Month</h6>
+                                        <select class="selectpicker" data-style="outline-style light-select"
+                                            id="monthddl3">
+                                            <option value="Jan">Jan</option>
+                                            <option value="Feb">Feb</option>
+                                            <option value="Mar">Mar</option>
+                                            <option value="Apr">Apr</option>
+                                            <option value="May">May</option>
+                                            <option value="Jun">Jun</option>
+                                            <option value="Jul">Jul</option>
+                                            <option value="Aug">Aug</option>
+                                            <option value="Sep">Sep</option>
+                                            <option value="Oct">Oct</option>
+                                            <option value="Nov">Nov</option>
+                                            <option value="Dec">Dec</option>
+                                        </select>
+                                    </div>
+                                    <div class="menu-sub-item quarterddl-item pr-3" style="display:none;">
+                                        <h6 class="blue">From Quarter</h6>
+                                        <select class="selectpicker" data-style="outline-style light-select"
+                                            id="quarterddl3">
+                                            <option value="1">Q1</option>
+                                            <option value="2">Q2</option>
+                                            <option value="3">Q3</option>
+                                            <option value="4">Q4</option>
+                                        </select>
+                                    </div>
+                                    <div class="menu-sub-item quarterddl-item" style="display:none;">
+                                        <h6 class="blue">To Quarter</h6>
+                                        <select class="selectpicker" data-style="outline-style light-select"
+                                            id="quarterddl4">
+                                            <option value="1">Q1</option>
+                                            <option value="2">Q2</option>
+                                            <option value="3">Q3</option>
+                                            <option value="4">Q4</option>
+                                        </select>
+                                    </div>
+                                    <div class="menu-sub-item monthddl-item pr-3" style="display:none;">
+                                        <h6 class="blue">To Month</h6>
+                                        <select class="selectpicker" data-style="outline-style light-select"
+                                            id="monthddl4">
+                                            <option value="Jan">Jan</option>
+                                            <option value="Feb">Feb</option>
+                                            <option value="Mar">Mar</option>
+                                            <option value="Apr">Apr</option>
+                                            <option value="May">May</option>
+                                            <option value="Jun">Jun</option>
+                                            <option value="Jul">Jul</option>
+                                            <option value="Aug">Aug</option>
+                                            <option value="Sep">Sep</option>
+                                            <option value="Oct">Oct</option>
+                                            <option value="Nov">Nov</option>
+                                            <option value="Dec">Dec</option>
+                                        </select>
+                                    </div>
+                                    <div class="menu-sub-item">
+                                        <a href="#" class="btn waves-effect waves-light btn-rounded button-green"
+                                            id="btn_compare_romi_cpa">COMPARE</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="main-content">
+                                <h4 class="text-center m-t-10 font-weight-bold" id="chart_name"></h4>
+                                <div id="chart" class="w-100 m-t-25">
+
+                                </div>
+                                <div class="center mt-2 mb-3">
+                                    <button data-chart-name="chart"
+                                        class="btn waves-effect waves-light btn-rounded button-green exportAsImage">
+                                        Save as Image
+                                    </button>
+                                </div>
+                            </div>
+                        </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End footer -->
+    <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Modal Content -->
+    <!-- ============================================================== -->
+    <!-- #addscenario content -->
+    <div id="addscenario" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="vcenter" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content grey-bg fixed-height">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="vcenter">More scenarios to Download</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <form id="downloadscenarios_form" class="">
+                    <div class="modal-body">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="blue t300">Compare Scenario</h4>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <select class="selectpicker modalselectBox"
+                                            data-style="form-control outline-style mmo-select"
+                                            id="modalscenarioslistBox_1">
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <select class="selectpicker modalselectBox"
+                                            data-style="form-control outline-style mmo-select"
+                                            id="modalscenarioslistBox_2">
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button type="button" class="btn btn-blue btn-circle"
+                                            id="addcomparescenarioBtn"><i class="ti-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col" id="addComparesionsBox" style="display: none;">
+                                <h4 class="blue t300 px-3">Add Scenario</h4>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 center">
+                                <button type="button" class="btn button-green btn-rounded uppercase"
+                                    id="comparescenariosdownloadBtn">download
+                                </button>
+                                <p class="gray-500 t300 lh1-2 m-t-10 m-b-0 text-small">Click to download<br>comparisons
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal #addscenario -->
+    <div class="modal fade" id="romiCpaModal" tabindex="-1" role="dialog" aria-labelledby="romiCpaModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="romiCpaModalLabel"></h5>
+                    <button type="button" class="close" data-hide="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-hide="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- addscenario content -->
+    <div id="scenarioComparisonGraph" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="vcenter"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content fixed-height">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="vcenter">Return curve for <span id=""
+                            class="geolevelTxtinmodal font-weight-bold"></span>
+                    </h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="comparison-stats-cards in-table">
+                        <div class="card stat-data pt-0">
+                            <div class="stat-heading">
+                                <div class="t500 text-smaller">Change in Spend</div>
+                            </div>
+                            <div class="stat-desc">
+                                <div class="row">
+                                    <div class="col-5"></div>
+                                    <div class="col-7">
+                                        <div class="progress m-t-5 progress-scenario-1">
+                                            <div class="progress-bar bg-info" style="width: 50%; height:10px;"
+                                                role="progressbar"><span class="sr-only">50% Complete</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-5">Scenario 4</div>
+                                    <div class="col-7">
+                                        <div class="progress m-t-5 progress-scenario-2">
+                                            <div class="progress-bar bg-info" style="width: 50%; height:10px;"
+                                                role="progressbar"><span class="sr-only">50% Complete</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card stat-data w-165 pt-0">
+                            <div class="stat-heading">
+                                <div class="t500 text-smaller">Change in Spend</div>
+                            </div>
+                            <div class="stat-desc">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2 class="green">$ 2917</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card stat-data  w-165 pt-0">
+                            <div class="stat-heading">
+                                <div class="t500 text-smaller">% Change in Spend</div>
+                            </div>
+                            <div class="stat-desc">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2 class="blue">9.98%</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card stat-data pt-0">
+                            <div class="stat-heading">
+                                <div class="t500 text-smaller">Change in <span class="geolevelTxtinmodal"></div>
+                            </div>
+                            <div class="stat-desc">
+                                <div class="row">
+                                    <div class="col-5"></div>
+                                    <div class="col-7">
+                                        <div class="progress m-t-5 progress-scenario-1">
+                                            <div class="progress-bar bg-info" style="width: 50%; height:10px;"
+                                                role="progressbar"><span class="sr-only">50% Complete</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-5">Scenario 4</div>
+                                    <div class="col-7">
+                                        <div class="progress m-t-5 progress-scenario-2">
+                                            <div class="progress-bar bg-info" style="width: 50%; height:10px;"
+                                                role="progressbar"><span class="sr-only">50% Complete</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card stat-data w-165 pt-0">
+                            <div class="stat-heading">
+                                <div class="t500 text-smaller">Change in <span class="geolevelTxtinmodal"></div>
+                            </div>
+                            <div class="stat-desc">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2 class="green">$ 2917</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card stat-data w-165 pt-0">
+                            <div class="stat-heading">
+                                <div class="t500 text-smaller">% Change in <span class="geolevelTxtinmodal"></div>
+                            </div>
+                            <div class="stat-desc">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2 class="blue">9.98%</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="total-revenue4" style="height: 250px;"></div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!-- ============================================================== -->
+    <!-- Modal Content -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="static/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="static/assets/node_modules/popper/popper.min.js"></script>
+    <script src="static/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="static/dist/js/perfect-scrollbar.jquery.min.js"></script>
+    <!--Wave Effects -->
+    <script src="static/dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="static/dist/js/sidebarmenu.js"></script>
+    <!--stickey kit -->
+    <script src="static/assets/node_modules/sticky-kit-master/dist/sticky-kit.min.js"></script>
+    <script src="static/assets/node_modules/sparkline/jquery.sparkline.min.js"></script>
+    <!--Custom JavaScript -->
+    <script src="static/assets/node_modules/bootstrap-table/dist/bootstrap-table.min.js"></script>
+    <script src="static/assets/node_modules/simple-tree-table/jquery-simple-tree-table.un.js"></script>
+    <script src="static/assets/node_modules/bootstrap-select/bootstrap-select.min.js" type="text/javascript"></script>
+    <script src="static/third-party-libaries/d3_v4.js"></script>
+    <script src="static/third-party-libaries/c3.js"></script>
+    <script src="static/third-party-libaries/tableHeadFixer.js"></script>
+    <script src="static/js/mmo_utils.js"></script>
+    <script src="static/js/mmo_tree.js"></script>
+    <script src="static/js/summary_blocks.js"></script>
+    <script src="static/js/compare_scenario.js"></script>
+    <script src="static/dist/js/custom.js"></script>
+    <script src="static/third-party-libaries/jquery-file-downloader.js"></script>
+    <script src="static/third-party-libaries/jquery.progressTimer.js"></script>
+
+    <style>
+        .comparison-table table tbody tr td:nth-child(3) {
+            border-left: none !important;
+        }
+
+        .comparison-table table tbody tr td:nth-child(5) {
+            border-left: none !important;
+        }
+
+        .comparison-table table tbody tr td:nth-child(7) {
+            border-left: none !important;
+        }
+
+        .comparison-table table tbody tr td:nth-child(9) {
+            border-left: none !important;
+        }
+    </style>
+</body>
+
+</html>

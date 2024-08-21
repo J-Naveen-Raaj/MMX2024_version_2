@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="static/assets/images/favicon.png">
+    <title>Market Mix Optimization</title>
+    <!-- Custom CSS -->
+    <link href="static/dist/css/style.css" rel="stylesheet">
+    <link href="static/assets/node_modules/simple-tree-table/jquery-simple-tree-table.css" rel="stylesheet">
+    <link href="static/assets/node_modules/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
+    <!-- chartist CSS -->
+    <link href="static/assets/node_modules/chartist-js/dist/chartist.min.css" rel="stylesheet">
+    <link href="static/assets/node_modules/chartist-js/dist/chartist-init.css" rel="stylesheet">
+    <link href="static/assets/node_modules/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css"
+        rel="stylesheet">
+    <link href="static/assets/node_modules/css-chart/css-chart.css" rel="stylesheet">
+    <!-- page css -->
+    <link href="static/dist/css/pages/tab-page.css" rel="stylesheet">
+    <!-- daterangepicker -->
+
+    <link rel="stylesheet" href="static/assets/node_modules/daterangepicker/daterangepicker.css" rel="stylesheet">
+
+    <link href="static/css/c3.css" rel="stylesheet" type="text/css">
+    <link href="static/css/custom.css" rel="stylesheet">
+    <link href="static/css/progress.css" rel="stylesheet">
+
+</head>
+
+<body class="horizontal-nav skin-blue client-page">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Market Mix Optimization</p>
+        </div>
+    </div>
+    <div class="preloader-progress">
+        <div class="loadingprogress">
+            <p class="m-l-5 mb-0">Loading ...</p>
+            <div class="loading-progress">
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar bluebg">
+            <div class="row">
+                <nav class="navbar top-navbar navbar-expand-md navbar-dark container">
+                    <!-- ============================================================== -->
+                    <!-- Logo -->
+                    <!-- ============================================================== -->
+                    <div class="col-2">
+                        <div class="navbar-header">
+                            <!-- <a href="/" class="navbar-brand-client">
+                                <img src="static/assets/images/rakuten_white_logo.png" alt="HomePage"
+                                    class="client-logo rakutenlogo" />
+                            </a> -->
+                            <a class="navbar-brand" href="/">
+                                <!-- Logo icon -->
+                                <b class="hidden-md-up">
+                                    <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                                    <!-- Dark Logo icon -->
+                                    <!-- <img src="static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" /> -->
+                                    <!-- Light Logo icon -->
+                                    <img src="static/assets/images/logo-light-icon.png" alt="homepage"
+                                        class="light-logo" />
+                                </b>
+                                <!--End Logo icon -->
+                                <!-- Logo text -->
+                                <span class="hidden-sm-down">
+                                    <!-- dark Logo text -->
+                                    <img src="static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                                    <!-- Light Logo text -->
+                                    <img src="static/assets/images/mmo_app_white.png" class="light-logo mmologo"
+                                        alt="homepage" />
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- End Logo -->
+                    <!-- ============================================================== -->
+
+                    <div class="col-2">
+
+                    </div>
+                    <div class="col-6">
+
+                        <ul class="navbar-nav my-lg-0">
+                            <!-- ============================================================== -->
+                            <!-- User Profile -->
+                            <!-- ============================================================== -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="reporting-allocation-actuals.html"><span class="">Historical
+                                        Reports</span> </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="scenarioanalysis.html"><span class="">Scenario
+                                        Planner</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="optimization.html"><span class="">Optimization</span> </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="scenario-comparison.html"><span class="">Scenario
+                                        Comparison</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="row col-2 timeperiod" id="timePeriodInfo">
+                    </div>
+                </nav>
+                <div class="nav-item  m-t-15 maintainceclass">
+                    <a class="nav-link p-0 m-0" href="maintenance.html"><span class=""><i class="fa fa-cogs"
+                                aria-hidden="true"></span></i></a>
+                </div>
+                <div class="nav-item glossary">
+                    <a class="nav-link" href="static/assets/Tiger Glossary .pdf" target="_blank" data-toggle="tooltip"
+                        title="Glossary"><span class=""><i class="fa fa-question-circle"></i></span></a>
+                </div>
+            </div>
+
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper shiftedtoTop">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- <div class="container"> -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <!-- ============================================================== -->
+            <form id="levelip_form" class="form-material newScenarioForm">
+                <div class="admin-menu-row text-lead upperbar">
+                    <h5 class="col-2  summarylabel summaryrow"> Scenario Summary </h5>
+                </div>
+                <div class="admin-menu-row topadminrow borderclass">
+                    <div class="col-4">
+                        <div class="menu-item scenario-form menuitemblock">
+                            <div class="menu-sub-item">
+                                <span class="grey">Select Scenario</span>
+                            </div>
+                            <div class="menu-sub-item selection">
+                                <select class="selectpicker" data-style="outline-style no-bg" data-live-search="true"
+                                    data-placeholder="Search..." id="selectScenario"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="menu-item menuitemblock">
+                            <div class="menu-sub-item">
+                                <span class="grey">Occurrence</span>
+                            </div>
+                            <div class="menu-sub-item">
+                                <select class="selectpicker" data-style="outline-style light-select" id="whatif_Level">
+                                    <option value="yearly">Yearly</option>
+                                    <option value="qtrly">Quarterly</option>
+                                    <!-- <option value="halfyearly">Half-yearly</option> -->
+                                    <option value="monthly">Monthly</option>
+                                    <!-- <option value="weekly">Weekly</option> -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-item ml-auto menuitemblock">
+                        <div class="menu-sub-item">
+                            <span class="grey">Save Scenario As</span>
+                        </div>
+                        <div class="form-group mb-0 mr-1 inputscenario">
+                            <input type="text" class="form-control form-control-line snenarioName underlineclass"
+                                maxlength="30" name="scenarioName" id="savescnrip" value=""
+                                placeholder="Enter New Scenario Name">
+
+                        </div>
+
+                    </div>
+                    <div class="menu-item ml-auto">
+                        <div class="menu-sub-item">
+                            <button type="button"
+                                class="btn waves-effect waves-light btn-rounded button-green scnrsaveBtn snenarioSubmit snenarioSubmitplanner"
+                                id="save_scenario_btn" value="SAVE" disabled>
+                                <b>Save & Run Scenario</b>
+                            </button>
+
+                        </div>
+                    </div>
+
+
+                    <!--
+                    <div class="menu-item menu-item-right downloadscenariobtn">
+                        <a class="d-flex flex-row downloadscenario" href="#">
+                            <div class="align-self-center">
+                                <div class="lh1 text-small body-color">
+                                    Download<br>Scenario
+                                </div>
+                            </div>
+                            <div class="m-l-5 download-excel-button"><i class="mmoicon-excel"></i></div>
+                        </a>
+                    </div>
+                    -->
+                </div>
+                <h4 class="text-center" id="flashTxt" style="display: none;">
+                    <span id="scnrioenterName"></span>&nbsp;Scenario Saved Successfully
+                </h4>
+                <div class="comparison-stats-cards analysissummeryBox"></div>
+                <div class="admin-menu-row topadminrow lowerbar">
+                    <div class="col-3">
+                        <h5 class="summarylabel Taticlabel"> Tactic Planner </h5>
+                    </div>
+                    <div class="menu-item menu-item-right">
+                        <div class="menu-sub-item">
+                            <a id="importSampleData" type="button" href="#"
+                                class="btn waves-effect waves-light btn-rounded button-green">Download Template
+                            </a>
+                        </div>
+
+                        <div class="menu-sub-item p-t-5">
+                            <!-- <input type="file" class="form-control form-control-line text-white pt-2"
+                                data-style="outline-style light-select" name="importScenario" id="importScenario" /> -->
+
+                            <div style="width:350px;">
+                                <input type="file"
+                                    class="form-control form-control-line text-white pt-2 custom-file-upload"
+                                    data-style="outline-style light-select" name="importScenario" id="importScenario" />
+                                <button type="button" class="btn waves-effect waves-light btn-rounded browseBtn">
+                                    Browse Files
+                                </button>
+                                <div class="fileinputContainer" style="width:200px;">
+                                    <span class="fileInfo">Upload a file</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="menu-sub-item">
+                            <button id="import" type="button"
+                                class="btn waves-effect waves-light btn-rounded button-green">Import
+                            </button>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="comparison-main-content">
+                    <div class="table-responsive-lg hide-cols scnarioplanner" id="table-container">
+                        <table id="geolevel_Tbltree" class="table">
+                            <thead class="treeDataHeader"></thead>
+                            <tbody class="treeDatabody"></tbody>
+                        </table>
+                        <div id="show"></div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+            </form>
+            <!-- </div> -->
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="scenarioPlannerModal" tabindex="-1" role="dialog" aria-labelledby="app_status">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bluebg">
+                        <h3 class="white">Status</h3>
+                        <button type="button" class="close white" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="status_message"></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="app_error" tabindex="-1" role="dialog" aria-labelledby="app_error">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bluebg">
+                        <h3 class="white">Application Error</h3>
+                        <button type="button" class="close white" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="error_message">
+                        <p>There is no data available for current selections.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <div class="modal fade" id="plannererror" tabindex="-1" role="dialog" aria-labelledby="plannererrorLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="plannererrorLabel"></h5>
+                        <button type="button" class="close" data-hide="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-hide="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="static/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="static/assets/node_modules/popper/popper.min.js"></script>
+    <script src="static/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="static/third-party-libaries/lodash.js"></script>
+    <script src="static/dist/js/perfect-scrollbar.jquery.min.js"></script>
+    <!--Wave Effects -->
+    <script src="static/dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="static/dist/js/sidebarmenu.js"></script>
+    <!--stickey kit -->
+    <script src="static/assets/node_modules/sticky-kit-master/dist/sticky-kit.min.js"></script>
+    <script src="static/assets/node_modules/sparkline/jquery.sparkline.min.js"></script>
+    <!--Custom JavaScript -->
+    <script src="static/assets/node_modules/simple-tree-table/jquery-simple-tree-table.un.js"></script>
+    <script src="static/assets/node_modules/bootstrap-select/bootstrap-select.min.js" type="text/javascript"></script>
+    <script src="static/third-party-libaries/hide_cols.min.js"></script>
+    <script src="static/third-party-libaries/d3_v4.js"></script>
+    <script src="static/third-party-libaries/c3.js"></script>
+    <script src="static/third-party-libaries/tableHeadFixer.js"></script>
+    <script src="static/js/mmo_utils.js"></script>
+    <script src="static/js/mmo_tree.js"></script>
+    <script src="static/js/scenario_planner.js"></script>
+    <script src="static/dist/js/custom.js"></script>
+    <script src="static/third-party-libaries/jquery.progressTimer.js"></script>
+
+</body>
+
+</html>

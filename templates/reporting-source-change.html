@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="static/assets/images/favicon.png">
+    <title>Market Mix Optimization</title>
+    <!-- Custom CSS -->
+    <link href="static/dist/css/style.css" rel="stylesheet">
+    <link href="static/assets/node_modules/simple-tree-table/jquery-simple-tree-table.css" rel="stylesheet">
+    <link href="static/assets/node_modules/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
+    <!-- chartist CSS -->
+    <link href="static/assets/node_modules/css-chart/css-chart.css" rel="stylesheet">
+    <!-- page css -->
+    <link href="static/dist/css/pages/tab-page.css" rel="stylesheet">
+    <link href="static/css/c3.css" rel="stylesheet" type="text/css">
+    <link href="static/css/custom.css" rel="stylesheet">
+
+</head>
+
+<body class="horizontal-nav skin-blue client-page">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Market Mix Optimization</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar bluebg">
+            <div class="row">
+                <nav class="navbar top-navbar navbar-expand-md navbar-dark container">
+                    <!-- ============================================================== -->
+                    <!-- Logo -->
+                    <!-- ============================================================== -->
+                    <div class="col-2">
+                        <div class="navbar-header">
+                            <!-- <a href="/" class="navbar-brand-client">
+                                <img src="static/assets/images/rakuten_white_logo.png" alt="HomePage"
+                                    class="client-logo rakutenlogo" />
+                            </a> -->
+                            <a class="navbar-brand" href="/">
+                                <!-- Logo icon -->
+                                <b class="hidden-md-up">
+                                    <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                                    <!-- Dark Logo icon -->
+                                    <!-- <img src="static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" /> -->
+                                    <!-- Light Logo icon -->
+                                    <img src="static/assets/images/logo-light-icon.png" alt="homepage"
+                                        class="light-logo" />
+                                </b>
+                                <!--End Logo icon -->
+                                <!-- Logo text -->
+                                <span class="hidden-sm-down">
+                                    <!-- dark Logo text -->
+                                    <img src="static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                                    <!-- Light Logo text -->
+                                    <img src="static/assets/images/mmo_app_white.png" class="light-logo mmologo"
+                                        alt="homepage" />
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- End Logo -->
+                    <!-- ============================================================== -->
+                    <div class="col-2">
+
+                    </div>
+                    <div class="col-6">
+
+                        <ul class="navbar-nav my-lg-0">
+                            <!-- ============================================================== -->
+                            <!-- User Profile -->
+                            <!-- ============================================================== -->
+                            <li class="nav-item">
+                                <a class="nav-link active" href="reporting-allocation-actuals.html"><span
+                                        class="">Historical
+                                        Reports</span> </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="scenarioanalysis.html"><span class="">Scenario Planner</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="optimization.html"><span class="">Optimization</span> </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="scenario-comparison.html"><span class="">Scenario
+                                        Comparison</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="row col-2 timeperiod" id="timePeriodInfo">
+                    </div>
+                </nav>
+                <div class="nav-item  m-t-15 maintainceclass">
+                    <a class="nav-link p-0 m-0" href="maintenance.html"><span class=""><i class="fa fa-cogs"
+                                aria-hidden="true"></span></i></a>
+                </div>
+                <div class="nav-item glossary">
+                    <a class="nav-link" href="static/assets/Tiger Glossary .pdf" target="_blank" data-toggle="tooltip"
+                        title="Glossary"><span class=""><i class="fa fa-question-circle"></i></span></a>
+                </div>
+            </div>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper shiftedtoTop soctableclass">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <!-- ============================================================== -->
+            <div class="admin-menu-row upperbar p-l-5">
+                <div class="menu-item">
+                    <ul class="horizontal-menu outcome-comparison">
+                        <li><a href="reporting-allocation-actuals.html">Actuals</a></li>
+                        <li><a class="active" href="reporting-source-change.html">Source of Change</a></li>
+                        <li><a href="reporting-due-charts.html">Due to analysis</a></li>
+                        <li><a href="reporting-marginal-return-curves.html">Marginal Return Curves</a></li>
+                        <li><a href="spend_vs_outcome_charts.html">Spends vs Outcomes </a>
+                        <li><a href="reporting-secondary-contribution.html">Interaction Effect</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="admin-menu-row topadminrow borderclass">
+                <div class="row col-12 p-l-10">
+                    <div class="menu-item d-sm-block pl-0 col-5">
+                        <div style="margin-bottom: 13px;">
+                            <span class="d-inlineblock mrxs"><b>Compare Metrics</b></span>
+                        </div>
+                    </div>
+                    <div class="menu-item scenario-form">
+                        <div class="menu-sub-item" style="margin-bottom: 13px;">
+                            <span class="mrxs"><b>Source of Change Analysis</b></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-12 p-l-10">
+                    <div class="menu-item d-sm-block pl-0 col-5 pr-0">
+                        <div>
+                            <span class="outcome-comparison grey"><b>Metrics</b></span>
+                        </div>
+                    </div>
+                    <div class="menu-item scenario-form col-1 pl-0  p-r-5">
+                        <div class="menu-sub-item">
+                            <span class="outcome-comparison grey"><b>Scenario1</b></span>
+                        </div>
+                    </div>
+                    <div class="menu-item scenario-form col-2">
+                        <div class="menu-sub-item">
+                            <span class="outcome-comparison grey"><b>Scenario2</b></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-sub-item col-5 pl-0 pr-0 m-t-5">
+                    <form class="horizontal-menu">
+                        <span class="pr-2">
+                            <label class="labeloutcome">
+                                <input type="radio" id="overallchange" name="metric" value="Overall-Change"
+                                    class="metricLink">
+                                Overall Change
+                            </label>
+                        </span>
+                        <span class="pr-2">
+                            <label class="labeloutcome">
+                                <input type="radio" id="outcome1" name="metric" value="outcome1" class="metricLink">
+                                outcome1
+                            </label>
+                        </span>
+                        <span class="pr-2">
+                            <label class="labeloutcome">
+                                <input type="radio" id="outcome2" name="metric" value="outcome2" class="metricLink">
+                                outcome2
+                            </label>
+                        </span>
+                    </form>
+                </div>
+                <div class="row col-5">
+                    <div class="menu-sub-item p-r-15">
+                        <select class="selectpicker" data-style="outline-style light-select" id="scenario2">
+                        </select>
+                    </div>
+                    <div class="menu-sub-item">
+                        <select class="selectpicker" data-style="outline-style light-select" id="scenario1">
+                        </select>
+                    </div>
+                </div>
+                <!-- <div class="menu-item menu-item-right menu-item-sm-left">
+
+                    <button type="button" data-toggle="modal" data-target="#waterfallmodalBox" id="waterfallbtn"
+                        class="btn waves-effect waves-light btn-rounded button-green scnrsaveBtn snenarioSubmit" id=""
+                        value="">Waterfall Chart
+                    </button>
+                </div> -->
+                <div class="row col-6 p-b-5">
+                    <div class="menu-item col-2 pl-0 m-r-20 scenario-form">
+                        <span class="outcome-comparison grey"><b>Occurrence</b></span>
+                    </div>
+                    <div class="menu-sub-item  col-2 m-r-30 scenariolabel " style="display: inline-block;">
+                        <span class="grey"><b>Scenario1</b></span>
+                    </div>
+                    <div class="menu-sub-item scenariolabel" style="display: inline-block;">
+                        <span class="grey"><b>Scenario2</b></span>
+                    </div>
+                </div>
+                <div class="row col-12">
+                    <div class="col-9 pl-0">
+                        <div class="p-0">
+                            <div class="menu-item">
+                                <div class="menu-sub-item p-r-5">
+                                    <select class="selectpicker" data-style="outline-style light-select"
+                                        id="period_type">
+                                        <option value="year" selected>Yearly</option>
+                                        <!-- <option value="halfyear">HalfYearly</option> -->
+                                        <option value="quarter">Quarterly</option>
+                                        <option value="month">Monthly</option>
+                                    </select>
+                                </div>
+                                <div class="menu-sub-item halfyearddl-item" style="display:none;">
+                                    <select class="selectpicker" data-style="outline-style light-select"
+                                        id="halfyearddl1">
+                                        <option value="H1">H1</option>
+                                        <option value="H2">H2</option>
+                                    </select>
+                                </div>
+                                <div class="menu-sub-item quarterddl-item p-r-5" style="display:none;">
+                                    <select class="selectpicker" data-style="outline-style light-select"
+                                        id="quarterddl2">
+                                        <option value="Q1">Q1</option>
+                                        <option value="Q2">Q2</option>
+                                        <option value="Q3">Q3</option>
+                                        <option value="Q4">Q4</option>
+                                    </select>
+                                </div>
+                                <div class="menu-sub-item monthddl-item p-r-5" style="display:none;">
+                                    <select class="selectpicker" data-style="outline-style light-select" id="monthddl2">
+                                        <option value="Jan">Jan</option>
+                                        <option value="Feb">Feb</option>
+                                        <option value="Mar">Mar</option>
+                                        <option value="Apr">Apr</option>
+                                        <option value="May">May</option>
+                                        <option value="Jun">Jun</option>
+                                        <option value="Jul">Jul</option>
+                                        <option value="Aug">Aug</option>
+                                        <option value="Sep">Sep</option>
+                                        <option value="Oct">Oct</option>
+                                        <option value="Nov">Nov</option>
+                                        <option value="Dec">Dec</option>
+                                    </select>
+                                </div>
+                                <div class="menu-sub-item halfyearddl-item" style="display:none;">
+                                    <select class="selectpicker" data-style="outline-style light-select"
+                                        id="halfyearddl2">
+                                        <option value="H1">H1</option>
+                                        <option value="H2">H2</option>
+                                    </select>
+                                </div>
+                                <div class="menu-sub-item quarterddl-item" style="display:none;">
+                                    <select class="selectpicker" data-style="outline-style light-select"
+                                        id="quarterddl1">
+                                        <option value="Q1">Q1</option>
+                                        <option value="Q2">Q2</option>
+                                        <option value="Q3">Q3</option>
+                                        <option value="Q4">Q4</option>
+                                    </select>
+                                </div>
+                                <div class="menu-sub-item monthddl-item " style="display:none;">
+                                    <select class="selectpicker" data-style="outline-style light-select" id="monthddl1">
+                                        <option value="Jan">Jan</option>
+                                        <option value="Feb">Feb</option>
+                                        <option value="Mar">Mar</option>
+                                        <option value="Apr">Apr</option>
+                                        <option value="May">May</option>
+                                        <option value="Jun">Jun</option>
+                                        <option value="Jul">Jul</option>
+                                        <option value="Aug">Aug</option>
+                                        <option value="Sep">Sep</option>
+                                        <option value="Oct">Oct</option>
+                                        <option value="Nov">Nov</option>
+                                        <option value="Dec">Dec</option>
+                                    </select>
+                                </div>
+                                <div class="menu-sub-item">
+                                    <a href="#"
+                                        class="btn waves-effect waves-light btn-rounded button-green compareBtn comparebtn"
+                                        id="btn_compare_soc">Compare</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row col-3">
+                        <div class="menu-sub-item">
+                            <button type="button" data-toggle="modal" data-target="#waterfallmodalBox" id="waterfallbtn"
+                                class="btn waves-effect waves-light btn-rounded button-green scnrsaveBtn snenarioSubmit p-l-5 p-r-5 comparebtn"
+                                id="" value="">Waterfall Chart
+                            </button>
+                        </div>
+                        <div class="menu-item  graphblock inputscenario d-none d-sm-block  m-l-5"
+                            style="position:absolute; right:120px;">
+                            <a class="view-type toggle-btn m-t-5 m-l-5" style="margin-bottom:1px" href="#graph">
+                                <div class="m-l-5"><i class="fas fa-chart-line"></i>
+                                </div>
+                            </a>
+                            <a class="view-type toggle-btn active" style="margin-bottom:3px" href="#tabular">
+                                <div class="m-l-5"><i style="font-size:14px" class="fa fa-table"></i></div>
+                            </a>
+                        </div>
+                        <div class="menu-item menu-item-right menu-item-sm-left m-l-15">
+                            <div class="sm-width-37">
+                                <a class="d-flex flex-row downloadscenario exceldownload" href="#" download-type="csv">
+                                    <div class="m-l-5 m-t-5 download-excel-button"><i class="mmoicon-excel"></i></div>
+                                    <div class="align-self-center">
+                                        <div class="lh1 text-small body-color">
+                                            Download Report
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="" id="touchpoints_ddl">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="white">
+                                <div class="btn-group select-box-wrapper">
+                                    <a href="javascript:void(0)" class="maindropdown p-t-10 p-b-10"><b
+                                            style="color:#6c757d;font-size:14px;font-weight:bold;">Select
+                                            Channels/Tactic <span class="ti-angle-down"></span></b></a>
+                                    <div class="dropdown-menu main-dropdown-menu">
+                                        <div class="select-box" role="banner">
+                                            <div class="d-flex flex-row">
+                                                <div class="align-self-center">
+                                                    <div class="searchbox-wrapper">
+                                                        <div class="input-group searchbox">
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Search Touchpoint here"
+                                                                aria-label="Search Touchpoint here"
+                                                                id="geolevelsearchBox">
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">
+                                                                    <i class="ti-search"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <a href="#"
+                                                        class="mtxss btn waves-effect waves-light btn-rounded button-blue"
+                                                        id="compareBarChartapplyBtn">APPLY</a>
+                                                </div>
+                                            </div>
+
+                                            <div class="nav comparison-main-content" role="navigation">
+                                                <table id="dropdowntree" class="table">
+                                                    <tbody class="ddl"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="comparison-stats-cards bg-white">
+
+            </div>
+            <!-- <div class="admin-menu-row bluebg admin-menu-row-minheight-md comparison-block">
+                <div class="menu-item">
+                    <div class="white text-lead">Source of Change Analysis</div>
+                </div>
+                <div class="menu-item  menu-item-right d-none d-sm-block">
+                    <a class="view-type toggle-btn d-flex flex-row show" href="#graph">
+                        <div class="align-self-center">
+                            <div class="lh1 text-smallest white">
+                                Go To Graphical View
+                            </div>
+                        </div>
+                        <div class="m-l-5"><i class="white ico-bordered rotate-90 ti-align-left"></i></div>
+                    </a>
+                    <a class="view-type toggle-btn d-flex flex-row hide" href="#tabular">
+                        <div class="align-self-center">
+                            <div class="lh1 text-smallest white">
+                                Go To Tabular View
+                            </div>
+                        </div>
+                        <div class="m-l-5"><i class="white ico-bordered ti-align-justify"></i></div>
+                    </a>
+                </div>
+            </div> -->
+            <!-- <div class="admin-menu-row  admin-menu-row-minheight-md comparison-block" id="Compare-metricTxtBox">
+            </div> -->
+            <div class="row" id="comparesummaryHolder"></div>
+            <div class="comparison-main-content">
+                <div id="Compare-metricTblBox">
+                    <div class="table-responsive-lg hide-cols" id="table-container">
+                        <table id="geolevel_Tbltree" class="table">
+                            <thead class="treeDataHeader"></thead>
+                            <tbody class="treeDatabody"></tbody>
+                        </table>
+                        <div id="show"></div>
+                    </div>
+                </div>
+                <div class="card-deck" id="Compare-graphs">
+
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+
+
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+    </div>
+
+    <!-- #waterfallmodalBox content -->
+    <div id="waterfallmodalBox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="vcenter"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content fixed-height">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="outcome_title">Waterfall Chart</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div role="tabpanel">
+                        <div class="menu-item">
+                            <ul class="horizontal-menu bluebuttons nav nav-tabs pb-2" role="tablist">
+                                <li role="presentation"><a href="#highLevelWC" class="active"
+                                        aria-controls="highLevelWC" role="tab" data-toggle="tab">Overall % change</a>
+                                </li>
+                                <li role="presentation"><a href="#econSplit" class="" aria-controls="econSplit"
+                                        role="tab" data-toggle="tab">Marketing % change</a></li>
+                                <li role="presentation"><a href="#mediaSplit" class="" aria-controls="mediaSplit"
+                                        role="tab" data-toggle="tab">Base % change</a></li>
+                                <li role="presentation"><a href="#controlSplit" class="" aria-controls="controlSplit"
+                                        role="tab" data-toggle="tab">ExternalFactors % change</a></li>
+                                <!--<li role="presentation"><a href="#mediaSplit" class="" aria-controls="mediaSplit" role="tab" data-toggle="tab">Media Split</a></li>-->
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="highLevelWC">
+                                    <div class="">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col text-center" id="highlevelWaterfallChart">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="center">
+                                        <button data-chart-name="highlevelWaterfallChart"
+                                            class="btn waves-effect waves-light btn-rounded button-green exportAsImage">
+                                            Download Image
+                                        </button>
+                                        <button
+                                            class="btn waves-effect waves-light btn-rounded button-green download-waterfall-data"
+                                            data-download="highlevel">
+                                            Download waterfall data
+                                        </button>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="controlSplit">
+                                    <div class="">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col text-center" id="controlWaterfallChart">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="center">
+                                        <button data-chart-name="controlWaterfallChart"
+                                            class="btn waves-effect waves-light btn-rounded button-green exportAsImage">
+                                            Save as Image
+                                        </button>
+                                        <button
+                                            class="btn waves-effect waves-light btn-rounded button-green download-waterfall-data"
+                                            data-download="controlsplit">
+                                            Download waterfall data
+                                        </button>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="econSplit">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col text-center" id="econWaterfallChart">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="center">
+                                        <button data-chart-name="econWaterfallChart"
+                                            class="btn waves-effect waves-light btn-rounded button-green exportAsImage">
+                                            Save as Image
+                                        </button>
+                                        <button
+                                            class="btn waves-effect waves-light btn-rounded button-green download-waterfall-data"
+                                            data-download="econsplit">
+                                            Download waterfall data
+                                        </button>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="mediaSplit">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col text-center" id="mediaWaterfallChart">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="center">
+                                        <button data-chart-name="mediaWaterfallChart"
+                                            class="btn waves-effect waves-light btn-rounded button-green exportAsImage">
+                                            Save as Image
+                                        </button>
+                                        <button
+                                            class="btn waves-effect waves-light btn-rounded button-green download-waterfall-data"
+                                            data-download="mediasplit">
+                                            Download waterfall data
+                                        </button>
+                                    </div>
+                                </div>
+                                <!--
+                        <div role="tabpanel" class="tab-pane" id="mediaSplit">
+                            <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col text-center" id="mediaWaterfallChart">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                            <div class="center">
+                            <button data-chart-name="mediaWaterfallChart" class="btn waves-effect waves-light btn-rounded button-green exportAsImage">Save as Image</button>
+                            </div>
+                            </div>
+                            -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Modal Content -->
+    <!-- ============================================================== -->
+    <div class="modal fade" id="app_error" tabindex="-1" role="dialog" aria-labelledby="app_error">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bluebg">
+                    <h3 class="white">Application Message</h3>
+                    <button type="button" class="close white" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="error_message">
+                    <p>There is some error in application.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Modal Content -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="static/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="static/assets/node_modules/popper/popper.min.js"></script>
+    <script src="static/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="static/third-party-libaries/lodash.js"></script>
+    <script src="static/dist/js/perfect-scrollbar.jquery.min.js"></script>
+    <!--Wave Effects -->
+    <script src="static/dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="static/dist/js/sidebarmenu.js"></script>
+    <!--stickey kit -->
+    <script src="static/assets/node_modules/sticky-kit-master/dist/sticky-kit.min.js"></script>
+    <script src="static/assets/node_modules/sparkline/jquery.sparkline.min.js"></script>
+    <!--Custom JavaScript -->
+    <script src="static/assets/node_modules/simple-tree-table/jquery-simple-tree-table.un.js"></script>
+    <script src="static/assets/node_modules/bootstrap-select/bootstrap-select.min.js" type="text/javascript"></script>
+
+    <script src="static/assets/node_modules/sparkline/jquery.sparkline.min.js"></script>
+    <script src="static/third-party-libaries/FileSaver.min.js"></script>
+    <script src="static/third-party-libaries/tableExport.js"></script>
+    <script src="static/third-party-libaries/hide_cols.min.js"></script>
+    <script src="static/third-party-libaries/d3_v4.js"></script>
+    <script src="static/third-party-libaries/d3-annotation.min.js"></script>
+    <script src="static/third-party-libaries/c3.js"></script>
+    <script src="static/dist/js/custom.js"></script>
+    <script src="static/third-party-libaries/tableHeadFixer.js"></script>
+    <script src="static/js/mmo_utils.js"></script>
+    <script src="static/js/mmo_tree.js"></script>
+    <script src="static/js/saveSvgAsPng.js"></script>
+    <script src="static/js/summary_blocks.js"></script>
+    <script src="static/js/reporting_soc.js"></script>
+
+    <style>
+        .comparison-table table tbody tr td:nth-child(3) {
+            border-left: none !important;
+        }
+
+        .comparison-table table tbody tr td:nth-child(5) {
+            border-left: none !important;
+        }
+
+        .comparison-table table tbody tr td:nth-child(7) {
+            border-left: none !important;
+        }
+
+        .comparison-table table tbody tr td:nth-child(9) {
+            border-left: none !important;
+        }
+    </style>
+</body>
+
+</html>

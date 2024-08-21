@@ -1,0 +1,10 @@
+*.pyc
+logs/mmo_flask_app.log
+logs/mmo_flask_app_db.log
+*.log*
+session/
+app_server/asdf
+newvenv
+venv38
+venvnew
+venv3_10

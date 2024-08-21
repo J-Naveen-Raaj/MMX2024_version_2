@@ -1,0 +1,859 @@
+.client-logo {
+  width: 70px;
+}
+
+.fileinputContainer {
+  width: 150px;
+  display: inline-block;
+  border-bottom: 1px solid #f7901e;
+  border-radius: 0px;
+  color: #f7901e;
+  /* padding-bottom: 4px;
+  position: relative;
+  top: 4px; */
+}
+
+.Optim-fileinputContainer {
+  width: 100%;
+  border-bottom: 1px solid #e9ecef;
+  border-radius: 0px;
+}
+
+input[type='file'] {
+  display: none;
+}
+
+.file-info {
+  font-size: 0.9em;
+}
+
+.browseBtn {
+  font: 500 14px 'Calibri';
+  margin-bottom: 3px;
+  background-color: #fff;
+  color: #f7901e;
+  border: 2px solid #f7901e;
+}
+
+.browseBtn-blue {
+  margin-bottom: 3px;
+  background-color: #f7901e;
+  color: #ffffff;
+}
+
+@media (max-width: 300px) {
+  button {
+    width: 100%;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 0;
+  }
+
+  .file-info {
+    display: block;
+    margin: 10px 5px;
+  }
+}
+
+.modal-lg {
+  max-width: 91% !important;
+}
+
+.c3-axis-y-label,
+.c3-axis-x-label {
+  color: #f7901e;
+  fill: #f7901e;
+  /* text-transform: capitalize; */
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.c3 text {
+  fill-opacity: 1.0;
+}
+
+.main-content .graph-boxes-wrapper .graph-box {
+  width: 25%;
+  text-align: center;
+  padding: 20px 20px 0;
+  background-color: #fff;
+  border: 0px solid #dddddd;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+.unhidden {
+  display: block;
+}
+
+.comparison-stats-cards .stat-desc .legend {
+  margin-bottom: 0px;
+  color: #1f77b4;
+  font-size: 11px;
+  margin-top: 5px;
+  position: relative;
+  left: 32%;
+}
+
+.comparison-stats-cards .stat-desc .legend span {
+  color: #8BC53F;
+  margin-left: 30%;
+  font-weight: bold;
+}
+
+
+.comparison-data-block .stat-desc .legend {
+  margin-bottom: 0px;
+  color: #1f77b4;
+  font-size: 11px;
+  margin-top: 5px;
+  position: relative;
+  left: 32%;
+}
+
+.comparison-data-block .stat-desc .legend span {
+  color: #8BC53F;
+  margin-left: 10%;
+  font-weight: bold;
+}
+
+
+@media (min-width: 576px) {
+  .comparison-stats-cards .stat-desc .legend {
+    position: relative;
+    left: 10%;
+  }
+
+  .comparison-data-block .stat-desc .legend {
+    position: relative;
+    left: 10%;
+  }
+
+  #new_base_scenario_modal .modal-dialog,
+  #sc_managegroups .modal-dialog {
+    max-width: 80%;
+  }
+
+}
+
+@media (min-width: 768px) {
+  .comparison-stats-cards .stat-desc .legend {
+    position: relative;
+    left: 15%;
+  }
+
+  .comparison-data-block .stat-desc .legend {
+    position: relative;
+    left: 15%;
+  }
+}
+
+@media (min-width: 992px) {
+  .comparison-stats-cards .stat-desc .legend {
+    position: relative;
+    left: 15%;
+  }
+
+  .comparison-data-block .stat-desc .legend {
+    position: relative;
+    left: 15%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .comparison-stats-cards .stat-desc .legend {
+    position: relative;
+    left: 30%;
+  }
+
+  .comparison-data-block .stat-desc .legend {
+    position: relative;
+    left: 30%;
+  }
+}
+
+.bar.base rect {
+  fill: 98A4AE;
+}
+
+.bar.total rect {
+  fill: 98A4AE;
+}
+
+.bar.positive rect {
+  fill: green;
+}
+
+.bar.negative rect {
+  fill: red;
+}
+
+.bar line.connector {
+  stroke: #424242;
+  stroke-dasharray: 4;
+}
+
+.bar text {
+  fill: #000000;
+  font-size: 0.8rem;
+  text-anchor: middle;
+  font-weight: bold;
+}
+
+.tick line {
+  display: none;
+}
+
+.c3-axis-x text {
+  font-family: "Calibri", sans-serif;
+  fill: #000000;
+  font-size: 13px;
+}
+
+.stat-heading {
+  font-size: 14px;
+  padding: 0 1.35rem 1.10rem;
+  background-color: #fff;
+}
+
+.dropdown {
+  background-color: #fff;
+  border-radius: 4px;
+  color: #f7901e;
+}
+
+.stat-desc {
+  padding: 0 1.35rem 1.10rem;
+  background-color: #fff;
+}
+
+.analysissummeryBox {
+  margin-bottom: 10px;
+}
+
+.spendTxt {
+  font: 800 1rem 'Calibri';
+}
+
+#comparesummaryHolder .col-6:nth-child(2n) .row .col:last-child .stat-desc {
+  border-right: none !important;
+}
+
+.optimization-table table tbody tr:first-child {
+  font-weight: 100 !important;
+}
+
+/*optimization*/
+.time_period .bootstrap-select {
+  min-width: auto;
+}
+
+#individualspend table tr td {
+  text-align: center;
+}
+
+#individualspend table tbody tr td:first-child {
+  text-align: left;
+}
+
+.comparison-main-content #individualspend table tbody tr:first-child,
+.comparison-main-content #base_scenario_table tbody tr:first-child {
+  font-weight: normal;
+}
+
+.comparison-main-content #individualspend table tbody tr:last-child td,
+.comparison-main-content #group_constraints table tbody tr:last-child td,
+#base_scenario_table tbody tr:last-child td {
+  border-bottom: 1px solid black
+}
+
+.comparison-main-content #individualspend table tbody tr td:last-child,
+.comparison-main-content #group_constraints table tbody tr td:last-child,
+#base_scenario_table tbody tr td:last-child {
+  border-right: 1px solid black
+}
+
+.comparison-main-content .nav-tabs {
+  border: 0 !important;
+}
+
+.comparison-main-content .horizontal-menu li a:hover,
+.comparison-main-content .horizontal-menu li a.active {
+  color: #fff;
+  background-color: #f7901e;
+}
+
+.comparison-main-content .horizontal-menu li a {
+  color: black;
+  background: #eee;
+}
+
+.fileinputContainer {
+  border-color: #f7901e;
+}
+
+.mtgroup_error {
+  color: #f00;
+}
+
+.comparison-main-content.optimization_outter {
+  max-height: none;
+}
+
+table#base_scenario_table tbody tr td:first-child {
+  width: 320px;
+  min-width: 320px;
+  white-space: nowrap;
+}
+
+table#base_scenario_table thead tr .top-level-heading {
+  min-width: unset;
+}
+
+.fixed-table-loading {
+  display: none;
+}
+
+input#budget_value,
+input#total_budget {
+  font-size: initial;
+}
+
+/* for waterfall chart annotation */
+:root {
+  --line-chart-color: #607D8B;
+  --annotation-context-color: #00796B;
+  --annotation-above-color: #257dae;
+  --annotation-anomaly-color: #E8336D;
+}
+
+.annotation path {
+  stroke: var(--annotation-context-color);
+}
+
+.annotation:not(.above):not(.anomaly) path {
+  stroke-dasharray: 1, 3;
+}
+
+.annotation text {
+  fill: var(--annotation-context-color);
+}
+
+.annotation.above path {
+  stroke: var(--annotation-above-color);
+}
+
+.annotation.above text {
+  fill: var(--annotation-above-color);
+}
+
+.annotation.anomaly path {
+  stroke: var(--annotation-anomaly-color);
+  stroke-width: 2px;
+}
+
+.annotation.anomaly text {
+  fill: var(--annotation-anomaly-color);
+}
+
+.annotation-note-bg {
+  fill: rgba(0, 0, 0, 0);
+}
+
+.annotation-note-title {
+  font-weight: bold;
+}
+
+/* end */
+
+
+#touchpointsContainer {
+  display: flex;
+  align-items: center;
+}
+
+.pull-left.pagination-detail {
+  float: left !important;
+}
+
+.pull-right.pagination {
+  float: right !important;
+}
+
+.pagination li.active {
+  color: #fff;
+  background: #f7901e;
+}
+
+.pagination li {
+  border-radius: 12px;
+  color: #f7901e;
+  font-size: small;
+}
+
+li.page-number.active a {
+  color: #fff;
+}
+
+td.lower_bound a::before,
+td.upper_bound a::before {
+  content: '$';
+  position: absolute;
+  color: #037dae;
+  left: 0;
+}
+
+td.lower_bound_dollar a::after {
+  content: ' %';
+}
+
+td.lower_bound_dollar a::before {
+  content: '';
+}
+
+.lower_bound,
+.upper_bound {
+  position: relative;
+  margin-right: 10px;
+}
+
+td.lower_values {
+  /* visibility: hidden !important; */
+  opacity: 0 !important;
+}
+
+/* td.lower_values:hover {
+  background-color: rgba(245, 243, 243, 0.30980392156862746)
+} */
+
+td.lower_values:has(.editable.editable-click) {
+  /* visibility: visible !important; */
+  opacity: 1 !important;
+}
+
+td.upper_values {
+  opacity: 0 !important;
+}
+
+td.upper_values:has(.editable.editable-click) {
+  opacity: 1 !important;
+}
+
+#individualspend .fixed-table-body {
+  overflow: visible !important;
+}
+
+#individualspend .lower_label {
+  position: absolute;
+  top: -21px;
+  font-weight: bold;
+  right: 0%;
+}
+
+#individualspend .upper_label {
+  position: absolute;
+  top: -21px;
+  font-weight: bold;
+  right: 0%;
+}
+
+#individualspend .basespend_label {
+  position: absolute;
+  top: -21px;
+
+  font-weight: bold;
+  right: 0%;
+}
+
+#individualspend .total_lablel {
+  position: absolute;
+  top: -21px;
+
+  font-weight: bold;
+  left: 0%;
+}
+
+#individualspend th[data-field="Lower Bound Eff"],
+#individualspend th[data-field="Upper Bound Eff"],
+#individualspend th[data-field="spend"],
+#individualspend th[data-field="variable_category"] {
+  position: relative;
+}
+
+.lower_bound a.editable,
+.upper_bound a.editable {
+  /* float: right; */
+  padding-left: 10px;
+  position: relative;
+}
+
+.optimization_outter.comparison-main-content table tbody tr:hover:not(.comparison-data) td input[type="text"],
+.optimization_outter.comparison-main-content table tbody tr.active:not(.comparison-data) td input[type="text"],
+.optimization_outter.comparison-main-content table tbody tr:hover td a.editable {
+  color: #fff;
+}
+
+.editable-submit {
+  width: 30px;
+  height: 20px;
+  POSITION: RELATIVE;
+  background: #8bc53f;
+  border-color: #8bc53f;
+  color: #fff;
+  TEXT-ALIGN: CENTER;
+}
+
+.editable-submit::after {
+  content: 'Save';
+  left: 0;
+  top: 0;
+  position: absolute;
+  right: 0;
+}
+
+.editable-cancel,
+.editable-submit i {
+  display: none
+}
+
+.glyphicon-ok::before {
+  content: '\f00c ';
+  position: absolute;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  top: 2px;
+  left: 0;
+  right: 0;
+}
+
+.glyphicon-remove::before {
+  content: '\f00d';
+  position: absolute;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  top: 2px;
+  left: 0;
+  right: 0;
+}
+
+.optimization_outter .bootstrap-select .dropdown-menu,
+#optimizationPlanning .bootstrap-select .dropdown-menu {
+  transform: none !important;
+  min-width: unset !important;
+  top: 35px !important;
+}
+
+.remove_data {
+  width: 20px;
+}
+
+.remove_icon {
+  cursor: pointer;
+}
+
+#individualspendTable .bs-checkbox .th-inner::before {
+  content: 'Lock';
+  position: relative;
+}
+
+/* .lower_bound,.upper_bound{padding: 0!important;} */
+.lower_bound .editable-empty,
+.upper_bound .editable-empty {
+  padding: 10px;
+  display: block;
+  opacity: 0;
+}
+
+body .bootstrap-table .fixed-table-container .table tbody tr.selected td {
+  background-color: rgb(113, 25, 136, 0);
+}
+
+.editable-buttons {
+  margin-top: 8px;
+}
+
+/*optimization*/
+
+
+/* On mouse-over, add a grey background color */
+.remove_data:hover input~span {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.remove_data input:checked~span {
+  background-color: #711899;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.remove_data span:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.remove_data input:checked~span:after {
+  display: block;
+}
+
+.remove_data label {
+  position: relative;
+}
+
+/* Style the checkmark/indicator */
+.remove_data .span:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+#optimization_outcomes .danger,
+#outcome_comparisons .danger {
+  background: #FF3347;
+  color: #fff;
+}
+
+#optimization_outcomes .green,
+#outcome_comparisons .green {
+  background: #3DC763;
+  color: #fff !important;
+}
+
+.comparison-main-content #optimization_outcomes table tbody tr:first-child,
+.comparison-main-content #outcome_comparisons table tbody tr:first-child {
+  font-weight: normal;
+}
+
+#optimization_summary .col-md-12 .stat-heading {
+  display: none;
+}
+
+#optimization_summary #opt_sum_0.col-md-12 .stat-heading {
+  display: block;
+}
+
+.green span {
+  font-size: 20px;
+  float: left;
+  color: #6c758e;
+}
+
+.bootstrap-select .dropdown-menu {
+  transform: none !important;
+  min-width: unset !important;
+  top: 26px !important;
+  width: 100%;
+  background-color: #f2ece87d;
+  max-height: 300px !important;
+}
+
+.dropdown.bootstrap-select.modalselectBox {
+  min-width: auto;
+  width: 100%;
+}
+
+.bs-checkbox label {
+  margin-left: 4px;
+}
+
+#group_constraints_table tr:first-child {
+  font-weight: unset;
+}
+
+/* maintenance tab */
+
+.editable-cancel {
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+  POSITION: relative;
+  background: #6c757d;
+  border-color: #6c757d;
+  color: #fff;
+  text-align: center;
+}
+
+.editable-cancel::after {
+  content: 'Cancel';
+  left: 0;
+  top: 0;
+  position: absolute;
+  right: 0;
+}
+
+.editable-cancel:hover {
+  color: #6c757d;
+  background: #fff;
+}
+
+.glyphicon-remove {
+  display: none
+}
+
+.fa-check {
+  font-size: 1.5rem;
+  color: lightgreen;
+}
+
+.maintenance-tabs {
+  border: none;
+}
+
+#table-container {
+  background-color: #fff;
+}
+
+.charts_actual,
+#comboChart_box,
+#comboChart_box2,
+#comboChart_box3 {
+  background-color: #f2ece87d;
+}
+
+.black {
+  color: black;
+}
+
+.red {
+  color: red;
+}
+
+.positive {
+  color: green;
+}
+
+#kpiOutputComparison {
+  .mmoicon-excel:before {
+    color: #f7901e;
+  }
+}
+
+.topsummary {
+  background-color: #f7901e;
+  color: #fff;
+}
+
+.rakutenlogo {
+  height: 20px;
+}
+
+.individualspend_list,
+.group_constraints_list,
+.managegroups {
+  background-color: unset !important;
+}
+
+.optiumfields {
+  .bootstrap-select.disabled {
+    background-color: #9E9E9E;
+    opacity: 0.7;
+  }
+
+  .form-control[readonly] {
+    background-color: #9E9E9E;
+  }
+}
+
+input,
+input::placeholder {
+  font-weight: bold !important
+}
+
+.c3-axis .domain {
+  stroke: #9E9E9E;
+}
+
+.axis .domain {
+  stroke: #9E9E9E;
+}
+
+input:-internal-autofill-selected {
+  background-color: #fff !important;
+}
+
+.hierarchydropdown {
+  max-height: 55vh;
+}
+
+.timeperiod p {
+  color: #fff;
+  margin-bottom: 0px;
+}
+
+.reportingtable {
+
+  .comparison-main-content table {
+    width: unset !important;
+  }
+
+  .comparison-main-content table thead tr .second-level-heading {
+    width: unset !important;
+  }
+
+  .comparison-main-content table tbody tr td {
+    min-width: 77px;
+    max-width: 80px;
+  }
+
+  .comparison-main-content table tbody tr td:first-child {
+    min-width: 210px !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+
+}
+
+.group_constraints_period {
+  .dropdown-menu {
+    min-height: 45px !important;
+
+    .inner {
+      min-height: 40px !important;
+    }
+  }
+}
+
+.occurselect {
+  .bootstrap-select {
+    min-width: 197px;
+    width: 180px !important;
+  }
+}
+
+.optiumfields .disabled {
+  cursor: not-allowed;
+}
+
+.tactics_sc {
+  .bootstrap-select .dropdown-menu {
+    width: fit-content;
+  }
+}
+
+.confidence-note {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 22%;
+  background-color: #f8f9fa;
+  padding: 10px;
+
+  p {
+    line-height: 2px;
+  }
+}
+
+.budget_format {
+  background-color: white !important;
+  border-radius: 2px !important;
+}

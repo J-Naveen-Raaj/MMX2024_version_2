@@ -1,0 +1,10 @@
+---
+routing_api:
+  enabled: true
+applications:
+- name: mmo19
+  memory: 2GB
+  disk_quota: 3GB
+  buildpack: python_buildpack
+  env: 
+   CONDA_SSL_VERIFY: FALSE
