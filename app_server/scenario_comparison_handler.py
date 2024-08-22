@@ -14,6 +14,9 @@ from app_server.WaterfallChart import getWaterfallChartData
 
 logger = get_logger(__name__)
 
+EXTERNAL_FACTORS_MARKETING_BASE = 'External Factors/Marketing/Base'
+SPEND_EFFECT = "Spend Effect"
+EFFICIENCY_EFFECT = "Efficiency Effect"
 
 class ScenarioComparisonHandler(object):
     def __init__(self):
@@ -87,8 +90,8 @@ class ScenarioComparisonHandler(object):
         elif outcome == "outcome1":
             outcome = "outcome1"
 
-        if is_required_control:
-            node_id = 2000
+        # if is_required_control:
+        #     node_id = 2000
         else:
             node_id = 2000
 
@@ -257,8 +260,11 @@ class ScenarioComparisonHandler(object):
                             group_data_outcome11[i][1] = 0
                         else:
                             group_data_outcome11[i][1] = group_spend_s1[i][1] / group_data_s1[i][1]
+                    # except:
+                    #     group_data_outcome11[i][1] = group_data_s1[i][1]
                     except:
                         group_data_outcome11[i][1] = group_data_s1[i][1]
+                        raise
             group_data_outcome12 = group_data_s2.copy()
             if group_data_s2 == [] or group_spend_s2 == []:
                 group_data_outcome12 = []
@@ -269,8 +275,11 @@ class ScenarioComparisonHandler(object):
                             group_data_outcome12[i][1] = 0
                         else:
                             group_data_outcome12[i][1] = group_spend_s2[i][1] / group_data_s2[i][1]
+                    # except:
+                    #     group_data_outcome12[i][1] =  group_data_s2[i][1]
                     except:
                         group_data_outcome12[i][1] =  group_data_s2[i][1]
+                        raise
             node_data_o1 = dict(group_data_outcome11)
             node_data_o2 = dict(group_data_outcome12)
             node_data_o1.update(node_data_o2)
@@ -361,7 +370,31 @@ class ScenarioComparisonHandler(object):
                         / i["node_data"]["Year_" + str(scenario_1)]
                     ) * 100,2)
                 spend_percent.append(i)
-            elif period_type == "quarter":
+            # elif period_type == "quarter":
+            #     if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
+            #         i["node_data"]["percent"] = 0
+            #     else:
+            #         i["node_data"]["percent"] = round((
+            #             (
+            #                 i["node_data"][quarter + "_" + str(scenario_2)]
+            #                 - i["node_data"][quarter + "_" + str(scenario_1)]
+            #             )
+            #             / i["node_data"][quarter + "_" + str(scenario_1)]
+            #         ) * 100,2)
+            #     spend_percent.append(i)
+            # elif period_type == "month":
+            #     if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
+            #         i["node_data"]["percent"] = 0
+            #     else:
+            #         i["node_data"]["percent"] = round((
+            #             (
+            #                 i["node_data"][quarter + "_" + str(scenario_2)]
+            #                 - i["node_data"][quarter + "_" + str(scenario_1)]
+            #             )
+            #             / i["node_data"][quarter + "_" + str(scenario_1)]
+            #         ) * 100,2)
+            #     spend_percent.append(i)
+            elif period_type in ["quarter", "month"]:
                 if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
                     i["node_data"]["percent"] = 0
                 else:
@@ -371,19 +404,7 @@ class ScenarioComparisonHandler(object):
                             - i["node_data"][quarter + "_" + str(scenario_1)]
                         )
                         / i["node_data"][quarter + "_" + str(scenario_1)]
-                    ) * 100,2)
-                spend_percent.append(i)
-            elif period_type == "month":
-                if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
-                    i["node_data"]["percent"] = 0
-                else:
-                    i["node_data"]["percent"] = round((
-                        (
-                            i["node_data"][quarter + "_" + str(scenario_2)]
-                            - i["node_data"][quarter + "_" + str(scenario_1)]
-                        )
-                        / i["node_data"][quarter + "_" + str(scenario_1)]
-                    ) * 100,2)
+                    ) * 100, 2)
                 spend_percent.append(i)
         final["spends"] = spend_percent
         outcome_percent = []
@@ -400,7 +421,31 @@ class ScenarioComparisonHandler(object):
                         / i["node_data"]["Year_" + str(scenario_1)]
                     ) * 100,2)
                 outcome_percent.append(i)
-            elif period_type == "quarter":
+            # elif period_type == "quarter":
+            #     if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
+            #         i["node_data"]["percent"] = 0
+            #     else:
+            #         i["node_data"]["percent"] = round((
+            #             (
+            #                 i["node_data"][quarter + "_" + str(scenario_2)]
+            #                 - i["node_data"][quarter + "_" + str(scenario_1)]
+            #             )
+            #             / i["node_data"][quarter + "_" + str(scenario_1)]
+            #         ) * 100,2)
+            #     outcome_percent.append(i)
+            # elif period_type == "month":
+            #     if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
+            #         i["node_data"]["percent"] = 0
+            #     else:
+            #         i["node_data"]["percent"] =round((
+            #             (
+            #                 i["node_data"][quarter + "_" + str(scenario_2)]
+            #                 - i["node_data"][quarter + "_" + str(scenario_1)]
+            #             )
+            #             / i["node_data"][quarter + "_" + str(scenario_1)]
+            #         ) * 100,2)
+            #     outcome_percent.append(i)
+            elif period_type in ["quarter", "month"]:
                 if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
                     i["node_data"]["percent"] = 0
                 else:
@@ -410,19 +455,7 @@ class ScenarioComparisonHandler(object):
                             - i["node_data"][quarter + "_" + str(scenario_1)]
                         )
                         / i["node_data"][quarter + "_" + str(scenario_1)]
-                    ) * 100,2)
-                outcome_percent.append(i)
-            elif period_type == "month":
-                if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
-                    i["node_data"]["percent"] = 0
-                else:
-                    i["node_data"]["percent"] =round((
-                        (
-                            i["node_data"][quarter + "_" + str(scenario_2)]
-                            - i["node_data"][quarter + "_" + str(scenario_1)]
-                        )
-                        / i["node_data"][quarter + "_" + str(scenario_1)]
-                    ) * 100,2)
+                    ) * 100, 2)
                 outcome_percent.append(i)
         final["outcomes"] = outcome_percent
         cpa_percent = []
@@ -439,7 +472,31 @@ class ScenarioComparisonHandler(object):
                         / i["node_data"]["Year_" + str(scenario_1)]
                     ) * 100,2)
                 cpa_percent.append(i)
-            elif period_type == "quarter":
+            # elif period_type == "quarter":
+            #     if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
+            #         i["node_data"]["percent"] = 0
+            #     else:
+            #         i["node_data"]["percent"] = round((
+            #             (
+            #                 i["node_data"][quarter + "_" + str(scenario_2)]
+            #                 - i["node_data"][quarter + "_" + str(scenario_1)]
+            #             )
+            #             / i["node_data"][quarter + "_" + str(scenario_1)]
+            #         ) * 100,2)
+            #     cpa_percent.append(i)
+            # elif period_type == "month":
+            #     if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
+            #         i["node_data"]["percent"] = 0
+            #     else:
+            #         i["node_data"]["percent"] = round((
+            #             (
+            #                 i["node_data"][quarter + "_" + str(scenario_2)]
+            #                 - i["node_data"][quarter + "_" + str(scenario_1)]
+            #             )
+            #             / i["node_data"][quarter + "_" + str(scenario_1)]
+            #         ) * 100,2)
+            #     cpa_percent.append(i)
+            elif period_type in ["quarter", "month"]:
                 if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
                     i["node_data"]["percent"] = 0
                 else:
@@ -449,19 +506,7 @@ class ScenarioComparisonHandler(object):
                             - i["node_data"][quarter + "_" + str(scenario_1)]
                         )
                         / i["node_data"][quarter + "_" + str(scenario_1)]
-                    ) * 100,2)
-                cpa_percent.append(i)
-            elif period_type == "month":
-                if i["node_data"][quarter + "_" + str(scenario_1)] == 0:
-                    i["node_data"]["percent"] = 0
-                else:
-                    i["node_data"]["percent"] = round((
-                        (
-                            i["node_data"][quarter + "_" + str(scenario_2)]
-                            - i["node_data"][quarter + "_" + str(scenario_1)]
-                        )
-                        / i["node_data"][quarter + "_" + str(scenario_1)]
-                    ) * 100,2)
+                    ) * 100, 2)
                 cpa_percent.append(i)
         final["cpa"] = cpa_percent
         return final
@@ -542,8 +587,9 @@ class ScenarioComparisonHandler(object):
             s2_spends = s2_spends[
                 s2_spends["month"] == request_data["month2"] + "_" + scenario_2
             ]
-
-        results = pd.merge(s1_results, s2_results, how="left", on=["node_name"])
+            
+        # results = pd.merge(s1_results, s2_results, how="left", on=["node_name"])
+        results = pd.merge(s1_results, s2_results, how="left", on=["node_name"], validate="many_to_many")
         results.rename(
             {"allocation_x": "scenario1", "allocation_y": "scenario2"},
             axis=1,
@@ -568,7 +614,10 @@ class ScenarioComparisonHandler(object):
         ## Fix for not reporting DMA level numbers --- Himanshu -- 05/07/2020
         # In case, we need DMA level reporting, comment this line and
         # comment the above line
-        self.df = media_hierarchy.merge(results, on=["node_name"], how="left").replace(
+        # self.df = media_hierarchy.merge(results, on=["node_name"], how="left").replace(
+        #     r"^\s*$", np.nan, regex=True
+        # )
+        self.df = media_hierarchy.merge(results, on=["node_name"], how="left", validate="many_to_many").replace(
             r"^\s*$", np.nan, regex=True
         )
         self.df = self.df.rename(
@@ -1120,7 +1169,8 @@ class ScenarioComparisonHandler(object):
         full_media_hierarchy = pd.DataFrame.from_records(
             self.scenario_comparison_dao.get_media_hierarchy_download_data()
         ).sort_values(by=["node_seq", "node_id"])
-        result = pd.merge(full_media_hierarchy, final_df, how="right", on=["node_id"])
+        # result = pd.merge(full_media_hierarchy, final_df, how="right", on=["node_id"])
+        result = pd.merge(full_media_hierarchy, final_df, how="right", on=["node_id"], validate="many_to_many")
         result.insert(
             2,
             "External Factors/Marketing/Base",
@@ -1141,10 +1191,10 @@ class ScenarioComparisonHandler(object):
 
             # Convert columns to categorical data types with specified order
             result['period_name'] = pd.Categorical(result['period_name'], categories=period_order, ordered=True)
-            result['External Factors/Marketing/Base'] = pd.Categorical(result['External Factors/Marketing/Base'], categories=external_order, ordered=True)
+            result[EXTERNAL_FACTORS_MARKETING_BASE] = pd.Categorical(result[EXTERNAL_FACTORS_MARKETING_BASE], categories=external_order, ordered=True)
 
             # Sort the DataFrame based on the specified order of columns
-            result = result.sort_values(by=['External Factors/Marketing/Base', 'level', 'marketing_tactics', 'period_name'])            
+            result = result.sort_values(by=[EXTERNAL_FACTORS_MARKETING_BASE, 'level', 'marketing_tactics', 'period_name'])            
         return result
 
     def get_tree_table_headers(self, scenarios, periods):
@@ -1178,8 +1228,8 @@ class ScenarioComparisonHandler(object):
 
     def due_to_analysis(self, request_data):
         period_type = request_data["period_type"]
-        year_2 = int(request_data["scenario_1"])
-        year_1 = int(request_data["scenario_2"])
+        # year_2 = int(request_data["scenario_1"])
+        # year_1 = int(request_data["scenario_2"])
         period_2 = request_data["period_1"]
         period_1 = request_data["period_2"]
         scenario_2 = int(request_data["scenario_1"])
@@ -1413,8 +1463,8 @@ class ScenarioComparisonHandler(object):
             result = pd.DataFrame()
             result[period_1 + str(scenario_1)] = allocation_period_1["values"]
             result["Touch_Points"] = touchpoints
-            result["Spend Effect"] = spend_touchpoint_attribution
-            result["Efficiency Effect"] = efficiency_touchpoint_attribution
+            result[SPEND_EFFECT] = spend_touchpoint_attribution
+            result[EFFICIENCY_EFFECT] = efficiency_touchpoint_attribution
             result[period_2 + str(scenario_2)] = allocation_period_2["values"]
             result = pd.merge(
                 result,
@@ -1422,6 +1472,7 @@ class ScenarioComparisonHandler(object):
                 left_on="Touch_Points",
                 right_on="node_name",
                 how="left",
+                validate=None
             )
             if len(selected_node_names) > 0:
                 result = result[result["node_name"].isin(selected_node_names)]
@@ -1447,10 +1498,10 @@ class ScenarioComparisonHandler(object):
                     "value": data[period_2 + str(scenario_2)].sum(),
                 },
                 incremental={
-                    "names": ["Spend Effect", "Efficiency Effect"],
+                    "names": [SPEND_EFFECT, EFFICIENCY_EFFECT],
                     "values": [
-                        data["Spend Effect"].sum(),
-                        data["Efficiency Effect"].sum(),
+                        data[SPEND_EFFECT].sum(),
+                        data[EFFICIENCY_EFFECT].sum(),
                     ],
                 },
                 total={
@@ -1537,9 +1588,12 @@ class ScenarioComparisonHandler(object):
         spend = spend.reset_index().drop("index", axis=1)
         spend.rename(columns={"scenario_id": "year"}, inplace=True)
         spend["spend_value"] = spend["spend_value"].astype(float)
+        # data = query_result_wide.merge(
+        #     spend, on=["node_name", "year", "halfyear", "quarter", "month"], how="left"
+        # ).fillna(0)
         data = query_result_wide.merge(
             spend, on=["node_name", "year", "halfyear", "quarter", "month"], how="left"
-        ).fillna(0)
+        , validate="many_to_many").fillna(0)
         media_hierarchy = pd.DataFrame.from_records(
             self.scenario_comparison_dao.touchpoints()
         ).sort_values(by=["node_seq", "node_id"])
@@ -1560,7 +1614,8 @@ class ScenarioComparisonHandler(object):
         media_data["spend_value"] = media_data["spend_value"].fillna(0)
         # media_data["O_NTFHH_CNT"] = media_data["O_NTFHH_CNT"].fillna(0)
 
-        media_data = pd.merge(media_data, media_hierarchy)
+        # media_data = pd.merge(media_data, media_hierarchy)
+        media_data = pd.merge(media_data, media_hierarchy, how="inner", on=None, validate="many_to_many")
 
         no_of_years = to_year - from_year + 1
         # iterate for number of given years between from and to years

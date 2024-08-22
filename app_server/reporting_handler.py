@@ -15,7 +15,14 @@ from app_server.WaterfallChart import getWaterfallChartData
 
 logger = get_logger(__name__)
 
-
+LEVEL_1 = "Level 1"
+LEVEL_2 = "Level 2"
+LEVEL_3 = "Level 3"
+FORMAL_STRING = r"^\s*$"
+FORMAT_STRING = "{:,.0f}"
+SPEND = "Spend "
+SPEND_EFFECT = "Spend Effect"
+EFFICIENCY_EFFECT = "Efficiency Effect"
 class ReportingHandler(object):
     def __init__(self):
         self.db_conn = DatabaseHandler().get_database_conn()
@@ -162,7 +169,7 @@ class ReportingHandler(object):
         spend["spend_value"] = spend["spend_value"].astype(float)
         data = query_result_wide.merge(
             spend, on=["node_name", "geo"], how="left"
-        ).fillna(0)
+        , validate="many_to_many").fillna(0)
 
         # media_hierarchy = pd.DataFrame.from_records(self.reporting_dao.get_media_hierarchy_new()).sort_values(
         #     by=['node_seq', 'node_id'])
@@ -230,20 +237,20 @@ class ReportingHandler(object):
         total_spend_media_data = media_data["spend_value"].sum()
 
         # check for the level and filter the media hierarchy data accordingly
-        if level == "Level 1":
+        if level == LEVEL_1:
             filtered_media_hierarchy = media_hierarchy[
-                media_hierarchy["level"].isin(["Level 1"])
+                media_hierarchy["level"].isin([LEVEL_1])
             ]
-        elif level == "Level 2":
+        elif level == LEVEL_2:
             filtered_media_hierarchy = media_hierarchy[
-                media_hierarchy["level"].isin(["Level 1", "Level 2"])
+                media_hierarchy["level"].isin([LEVEL_1, LEVEL_2])
             ]
-        elif level == "Level 3":
+        elif level == LEVEL_3:
             filtered_media_hierarchy = media_hierarchy[
                 media_hierarchy["level"].isin(
                     [
-                        "Level 1",
-                        "Level 2",
+                        LEVEL_1,
+                        LEVEL_2,
                         "Variable",
                     ]
                 )
@@ -252,9 +259,9 @@ class ReportingHandler(object):
             filtered_media_hierarchy = media_hierarchy[
                 media_hierarchy["level"].isin(
                     [
-                        "Level 1",
-                        "Level 2",
-                        "Level 3",
+                        LEVEL_1,
+                        LEVEL_2,
+                        LEVEL_3,
                         "Variable",
                     ]
                 )
@@ -486,20 +493,8 @@ class ReportingHandler(object):
                 (endtime - starttime),
             )
             return output
-        # output = {}
-        # output.update(
-        #     {
-        #         "allocation": allocation.to_dict("records"),
-        #         "attribution": attribution.to_dict("records"),
-        #         "efficiency": efficiency.to_dict("records"),
-        #         "metric": metric.to_dict("records"),
-        #     }
-        # )
-
-        # return output
 
     def fetch_reporting_allocation_graph(self, request_data):
-        starttime = time.time()
         logger.info("Reporting: data preparation for allocation is started")
         allocation_year = int(request_data["allocation_year"])
         period_type = request_data["period_type"]
@@ -520,7 +515,7 @@ class ReportingHandler(object):
             11: "Nov",
             12: "Dec",
         }
-        if level == "Level 1":
+        if level == LEVEL_1:
             nodes_data = [2001, 4000, 6000]
         else:
             nodes_param = request_data.get("nodes")
@@ -595,8 +590,11 @@ class ReportingHandler(object):
         # In case, we need DMA level reporting, comment this line and
         # comment the above line
         # pdb.set_trace()
-        self.df = media_hierarchy.merge(results, on=["node_name"], how="left").replace(
-            r"^\s*$", np.nan, regex=True
+        # self.df = media_hierarchy.merge(results, on=["node_name"], how="left").replace(
+        #     FORMAL_STRING, np.nan, regex=True
+        # )
+        self.df = media_hierarchy.merge(results, on=["node_name"], how="left", validate="many_to_many").replace(
+            FORMAL_STRING, np.nan, regex=True
         )
         self.df = self.df.rename(
             index=str,
@@ -624,7 +622,7 @@ class ReportingHandler(object):
             row_spend["node_disp_name"] = node["node_display_name"]
             if period_type == "quarter":
                 row_spend[
-                    "Spend " + str(allocation_year) + " Q" + str(quarter)
+                    SPEND + str(allocation_year) + " Q" + str(quarter)
                 ] = s1_spends[s1_spends["node_name"].isin(node.leaf_nodes)][
                     "spend_value"
                 ].sum()
@@ -644,7 +642,7 @@ class ReportingHandler(object):
                 ] = data[data["outcome"] == "outcome1"]["value"].sum()
             elif period_type == "month":
                 row_spend[
-                    "Spend "
+                    SPEND
                     + str(allocation_year)
                     + " "
                     + str(month_number_to_name[month])
@@ -666,7 +664,7 @@ class ReportingHandler(object):
                     + str(month_number_to_name[month])
                 ] = data[data["outcome"] == "outcome1"]["value"].sum()
             else:
-                row_spend["Spend " + str(allocation_year)] = s1_spends[
+                row_spend[SPEND + str(allocation_year)] = s1_spends[
                     s1_spends["node_name"].isin(node.leaf_nodes)
                 ]["spend_value"].sum()
                 row_spend[customer_names["outcome2"] + " " + str(allocation_year)] = data[
@@ -733,20 +731,20 @@ class ReportingHandler(object):
         )
         media_hierarchy = media_hierarchy[media_hierarchy["check"] == 1]
         media_hierarchy = media_hierarchy.drop("check", axis=1)
-        if level == "Level 1":
+        if level == LEVEL_1:
             filtered_media_hierarchy = media_hierarchy[
-                media_hierarchy["level"].isin(["Level 1"])
+                media_hierarchy["level"].isin([LEVEL_1])
             ]
-        elif level == "Level 2":
+        elif level == LEVEL_2:
             filtered_media_hierarchy = media_hierarchy[
-                media_hierarchy["level"].isin(["Level 1", "Level 2"])
+                media_hierarchy["level"].isin([LEVEL_1, LEVEL_2])
             ]
-        elif level == "Level 3":
+        elif level == LEVEL_3:
             filtered_media_hierarchy = media_hierarchy[
                 media_hierarchy["level"].isin(
                     [
-                        "Level 1",
-                        "Level 2",
+                        LEVEL_1,
+                        LEVEL_2,
                         "Variable",
                     ]
                 )
@@ -983,7 +981,7 @@ class ReportingHandler(object):
         # uncomment the above line
         spend_allocation1 = media_hierarchy.merge(
             s1_results, on=["node_name"], how="left"
-        ).replace(r"^\s*$", np.nan, regex=True)
+        ).replace(FORMAL_STRING, np.nan, regex=True)
         spend_allocation1 = spend_allocation1.rename(
             index=str,
             columns={
@@ -1004,7 +1002,7 @@ class ReportingHandler(object):
         # uncomment the above line
         spend_allocation2 = media_hierarchy.merge(
             s2_results, on=["node_name"], how="left"
-        ).replace(r"^\s*$", np.nan, regex=True)
+        ).replace(FORMAL_STRING, np.nan, regex=True)
         spend_allocation2 = spend_allocation2.rename(
             index=str,
             columns={
@@ -1111,8 +1109,11 @@ class ReportingHandler(object):
                 for i in range(len(group_spend_s1)):
                     try:
                         group_data_outcome11[i][1]=group_spend_s1[i][1]/group_data_s1[i][1]
+                    # except:
+                    #     group_data_outcome11[i][1] = group_spend_s1[i][1]
                     except:
                         group_data_outcome11[i][1] = group_spend_s1[i][1]
+                        raise
             group_data_outcome12 = group_data_s2.copy()
             if group_data_s2 == [] or group_spend_s2 == []:
                 group_data_outcome12 = []
@@ -1120,8 +1121,11 @@ class ReportingHandler(object):
                 for i in range(len(group_spend_s2)):
                     try:
                         group_data_outcome12[i][1]=group_spend_s2[i][1]/group_data_s2[i][1]
+                    # except:
+                    #     group_data_outcome12[i][1] = group_spend_s2[i][1]
                     except:
                         group_data_outcome12[i][1] = group_spend_s2[i][1]
+                        raise
             node_data_o1 = dict(group_data_outcome11)
             node_data_o2 = dict(group_data_outcome12)
             node_data_o1.update(node_data_o2)
@@ -1267,8 +1271,8 @@ class ReportingHandler(object):
             s2_spends = s2_spends[
                 s2_spends["month"] == request_data["month2"] + "_" + str(year2)
             ]
-
-        results = pd.merge(s1_results, s2_results, how="left", on=["node_name", "geo"])
+        # results = pd.merge(s1_results, s2_results, how="left", on=["node_name", "geo"])
+        results = pd.merge(s1_results, s2_results, how="left", on=["node_name", "geo"], validate="many_to_many")
         results.rename(
             {"allocation_x": "scenario1", "allocation_y": "scenario2"},
             axis=1,
@@ -1294,7 +1298,7 @@ class ReportingHandler(object):
         # In case, we need DMA level reporting, comment this line and
         # comment the above line
         self.df = media_hierarchy.merge(results, on=["node_name"], how="left").replace(
-            r"^\s*$", np.nan, regex=True
+            FORMAL_STRING, np.nan, regex=True
         )
         self.df = self.df.rename(
             index=str,
@@ -1309,7 +1313,7 @@ class ReportingHandler(object):
 
         final = []
         if not nodes:
-            relevant_nodes = media_hierarchy[(media_hierarchy["level"] == "Level 2") & (media_hierarchy["node_id"] < 2040)]["node_id"]
+            relevant_nodes = media_hierarchy[(media_hierarchy["level"] == LEVEL_2) & (media_hierarchy["node_id"] < 2040)]["node_id"]
         else:
             relevant_nodes = media_hierarchy[media_hierarchy["node_id"].isin(nodes)]["node_id"]
         for i, node in media_hierarchy[
@@ -1322,10 +1326,10 @@ class ReportingHandler(object):
             row_spend["node_id"] = node["node_id"]
             row_spend["node_name"] = node["node_name"]
             row_spend["node_disp_name"] = node["node_display_name"]
-            row_spend["Spend " + str(scenario_name_1)] = s1_spends[
+            row_spend[SPEND + str(scenario_name_1)] = s1_spends[
                 s1_spends["node_name"].isin(node.leaf_nodes)
             ]["spend_value"].sum()
-            row_spend["Spend " + str(scenario_name_2)] = s2_spends[
+            row_spend[SPEND + str(scenario_name_2)] = s2_spends[
                 s2_spends["node_name"].isin(node.leaf_nodes)
             ]["spend_value"].sum()
             if period_type == "year":
@@ -1566,12 +1570,18 @@ class ReportingHandler(object):
         )
         spend["spend_value"] = spend["spend_value"].astype(float)
         if period_type == "year" or period_type == "month":
+            # data = query_result_wide.merge(
+            #     spend, on=["node_name", "quarter", "geo", "month"], how="left"
+            # ).fillna(0)
             data = query_result_wide.merge(
-                spend, on=["node_name", "quarter", "geo", "month"], how="left"
+                spend, on=["node_name", "quarter", "geo", "month"], how="left", validate=None
             ).fillna(0)
         else:
+            # data = query_result_wide.merge(
+            #     spend, on=["node_name", "geo"], how="left"
+            # ).fillna(0)
             data = query_result_wide.merge(
-                spend, on=["node_name", "geo"], how="left"
+                spend, on=["node_name", "geo"], how="left", validate=None
             ).fillna(0)
 
         # media_hierarchy = pd.DataFrame.from_records(self.reporting_dao.get_media_hierarchy_new()).sort_values(
@@ -1947,7 +1957,7 @@ class ReportingHandler(object):
         full_media_hierarchy = pd.DataFrame.from_records(
             self.reporting_dao.get_media_hierarchy_old_download_data()
         ).sort_values(by=["node_seq", "node_id"])
-        result = pd.merge(full_media_hierarchy, final_df, how="right", on=["node_id"])
+        result = pd.merge(full_media_hierarchy, final_df, how="right", on=["node_id"], validate="many_to_many")
         result.insert(2, 'External Factors/Marketing/Base', result['node_id'].apply(lambda x: 'External Factors' if x >= 6000 else ('Base' if x >= 4000 else 'Marketing')))
 
         result.drop(["node_seq", "node_id"], axis=1, inplace=True)
@@ -1968,7 +1978,7 @@ class ReportingHandler(object):
         #     result = result[
         #         (result["Year"] == allocation_year) & (result["Month"] == int(month))
         #     ]
-        result["level"]=result["level"].apply(lambda x:"Level 3" if x=="Variable" else x)
+        result["level"]=result["level"].apply(lambda x:LEVEL_3 if x=="Variable" else x)
         return result
 
     def download_soc_data(self, request_data):
@@ -2357,17 +2367,17 @@ class ReportingHandler(object):
             if customer == "outcome2" or customer == "outcome1":
                 final_df[year_1 + " " + period_1 + ": " + customer] = final_df[
                     year_1 + " " + period_1 + ": " + customer
-                ].map("{:,.0f}".format)
+                ].map(FORMAT_STRING.format)
                 final_df[year_2 + " " + period_2 + ": " + customer] = final_df[
                     year_2 + " " + period_2 + ": " + customer
-                ].map("{:,.0f}".format)
+                ].map(FORMAT_STRING.format)
             else:
                 final_df[year_1 + " " + period_1 + ": " + customer] = final_df[
                     year_1 + " " + period_1 + ": " + customer
-                ].map("{:,.0f}".format)
+                ].map(FORMAT_STRING.format)
                 final_df[year_2 + " " + period_2 + ": " + customer] = final_df[
                     year_2 + " " + period_2 + ": " + customer
-                ].map("{:,.0f}".format)
+                ].map(FORMAT_STRING.format)
         c_customers = []
         for i in customer_list:
             customer_value = "c" + i
@@ -2399,10 +2409,10 @@ class ReportingHandler(object):
         full_media_hierarchy = pd.DataFrame.from_records(
             self.reporting_dao.get_media_hierarchy_old_download_data()
         ).sort_values(by=["node_seq", "node_id"])
-        result = pd.merge(full_media_hierarchy, final_df, how="right", on=["node_id"])
+        result = pd.merge(full_media_hierarchy, final_df, how="right", on=["node_id"], validate="many_to_many")
         result.insert(2, 'External Factors/Marketing/Base', result['node_id'].apply(lambda x: 'External Factors' if x >= 6000 else ('Base' if x >= 4000 else 'Marketing')))
         result.drop(["node_seq", "node_id"], axis=1, inplace=True)
-        result["level"]=result["level"].apply(lambda x:"Level 3" if x=="Variable" else x)
+        result["level"]=result["level"].apply(lambda x:LEVEL_3 if x=="Variable" else x)
 
         return result
 
@@ -2418,8 +2428,8 @@ class ReportingHandler(object):
         return soc
 
     def fetch_soc_waterfall_chart_data(self, request_data):
-        year1 = scenario_1 = int(request_data["year1"]) or 1
-        year2 = scenario_2 = int(request_data["year2"]) or 2
+        # year1 = scenario_1 = int(request_data["year1"]) or 1
+        # year2 = scenario_2 = int(request_data["year2"]) or 2
         period_type = request_data["period_type"] or "year"
         quarter1 = ""
         quarter2 = ""
@@ -2904,8 +2914,8 @@ class ReportingHandler(object):
             result = pd.DataFrame()
             result[period_1 + str(scenario_1)] = allocation_period_1["values"]
             result["Touch_Points"] = touchpoints
-            result["Spend Effect"] = spend_touchpoint_attribution
-            result["Efficiency Effect"] = efficiency_touchpoint_attribution
+            result[SPEND_EFFECT] = spend_touchpoint_attribution
+            result[EFFICIENCY_EFFECT] = efficiency_touchpoint_attribution
             result[period_2 + str(scenario_2)] = allocation_period_2["values"]
 
             result = pd.merge(
@@ -2939,10 +2949,10 @@ class ReportingHandler(object):
                     "value": data[period_2 + str(scenario_2)].sum(),
                 },
                 incremental={
-                    "names": ["Spend Effect", "Efficiency Effect"],
+                    "names": [SPEND_EFFECT, EFFICIENCY_EFFECT],
                     "values": [
-                        data["Spend Effect"].sum(),
-                        data["Efficiency Effect"].sum(),
+                        data[SPEND_EFFECT].sum(),
+                        data[EFFICIENCY_EFFECT].sum(),
                     ],
                 },
                 total={
@@ -3205,6 +3215,7 @@ class ReportingHandler(object):
             )
         )
         spend["spend_value"] = spend["spend_value"].astype(float)
+        # Cannot rectify this issue
         data = query_result_wide.merge(
             spend,
             on=["node_name", "geo", "year", "halfyear", "quarter", "month"],
@@ -3233,7 +3244,9 @@ class ReportingHandler(object):
         media_data["outcome1"] = media_data["outcome1"].fillna(0)
         media_data["spend_value"] = media_data["spend_value"].fillna(0)
         media_data["outcome2"] = media_data["outcome2"].fillna(0)
-        media_data = pd.merge(media_data, media_hierarchy)
+        # media_data = pd.merge(media_data, media_hierarchy)
+        media_data = pd.merge(media_data, media_hierarchy, how="inner", on=None, validate="many_to_many")
+
 
         no_of_years = to_year - from_year + 1
 
