@@ -21,8 +21,13 @@ LEVEL_3 = "Level 3"
 FORMAL_STRING = r"^\s*$"
 FORMAT_STRING = "{:,.0f}"
 SPEND = "Spend "
+SPENDS = " Spends"
 SPEND_EFFECT = "Spend Effect"
 EFFICIENCY_EFFECT = "Efficiency Effect"
+CURRENCY_FORMAT = "${:,.0f}"
+PERCENTAGE_FORMAT = "{:,.5f}%"
+DECIMAL_FORMAT = "{:,.5f}"
+
 class ReportingHandler(object):
     def __init__(self):
         self.db_conn = DatabaseHandler().get_database_conn()
@@ -1915,37 +1920,37 @@ class ReportingHandler(object):
                     )
         final_df = pd.DataFrame(final).replace([np.inf, -np.inf], np.nan).fillna(0)
 
-        final_df["Spend"] = final_df["Spend"].map("${:,.0f}".format)
+        final_df["Spend"] = final_df["Spend"].map(CURRENCY_FORMAT.format)
         final_df["outcome1"] = final_df["outcome1"].map("${:,.1f}".format)
         final_df["outcome2"] = final_df["outcome2"].map("{:,.1f}".format)
         # final_df["O_NTFASSET_IN"] = final_df["O_NTFASSET_IN"].map("${:,.1f}".format)
         final_df["O_TOTALASSET_IN"] = final_df["O_TOTALASSET_IN"].map("${:,.1f}".format)
         final_df["outcome1_Attribution"] = final_df["outcome1_Attribution"].map(
-            "{:,.5f}%".format
+            PERCENTAGE_FORMAT.format
         )
         final_df["outcome1_efficiency"] = final_df["outcome1_efficiency"].map(
-            "{:,.5f}".format
+            DECIMAL_FORMAT.format
         )
         # final_df["O_NTFHH_CNT_Attribution"] = final_df["O_NTFHH_CNT_Attribution"].map(
-        #     "{:,.5f}%".format
+        #     PERCENTAGE_FORMAT.format
         # )
         # final_df["O_NTFHH_CNT_efficiency"] = final_df["O_NTFHH_CNT_efficiency"].map(
-        #     "{:,.5f}".format
+        #     DECIMAL_FORMAT.format
         # )
         final_df["outcome2_Attribution"] = final_df["outcome2_Attribution"].map(
-            "{:,.5f}%".format
+            PERCENTAGE_FORMAT.format
         )
         final_df["outcome2_efficiency"] = final_df["outcome2_efficiency"].map(
-            "{:,.5f}".format
+            DECIMAL_FORMAT.format
         )
         final_df["O_TOTALASSET_IN_Attribution"] = final_df[
             "O_TOTALASSET_IN_Attribution"
-        ].map("{:,.5f}%".format)
+        ].map(PERCENTAGE_FORMAT.format)
         final_df["O_TOTALASSET_IN_efficiency"] = final_df[
             "O_TOTALASSET_IN_efficiency"
-        ].map("{:,.5f}".format)
+        ].map(DECIMAL_FORMAT.format)
         final_df["Spend_Attribution"] = final_df["Spend_Attribution"].map(
-            "{:,.5f}%".format
+            PERCENTAGE_FORMAT.format
         )
 
         # full_media_hierarchy = pd.DataFrame.from_records(
@@ -2164,14 +2169,14 @@ class ReportingHandler(object):
                     allocation_node_df["outcome"] == customer
                 ]  # For specific customer type
 
-                row[year_1 + " " + period_1 + ":" + " Spends"] = round(
+                row[year_1 + " " + period_1 + ":" + SPENDS] = round(
                     spend_node_df["spend_value" + "_" + str(scenario_1)].sum()
                 )
                 row[year_1 + " " + period_1 + ": " + customer] = round(
                     customer_df["allocation" + "_" + str(scenario_1)].sum()
                 )
 
-                row[year_2 + " " + period_2 + ":" + " Spends"] = round(
+                row[year_2 + " " + period_2 + ":" + SPENDS] = round(
                     spend_node_df["spend_value" + "_" + str(scenario_2)].sum()
                 )
                 row[year_2 + " " + period_2 + ": " + customer] = round(
@@ -2286,7 +2291,7 @@ class ReportingHandler(object):
                 row = {}
                 row["node_id"] = node["node_id"]
 
-                row[year_1 + " " + period_1 + ":" + " Spends"] = round(
+                row[year_1 + " " + period_1 + ":" + SPENDS] = round(
                     spend_node_df["spend_value" + "_" + str(scenario_1)].sum()
                 )
                 # Get allocations for all types of customer in customer list for first scenario
@@ -2306,7 +2311,7 @@ class ReportingHandler(object):
                             customer_df["allocation" + "_" + str(scenario_1)].sum()
                         )
 
-                row[year_2 + " " + period_2 + ":" + " Spends"] = round(
+                row[year_2 + " " + period_2 + ":" + SPENDS] = round(
                     spend_node_df["spend_value" + "_" + str(scenario_2)].sum()
                 )
                 # Get allocations for all types of customer in customer list for second scenario
@@ -2388,17 +2393,17 @@ class ReportingHandler(object):
             if customer == "coutcome2" or customer == "coutcome1":
                 final_df[year_1 + " " + period_1 + ": " + customer] = final_df[
                     year_1 + " " + period_1 + ": " + customer
-                ].map("${:,.0f}".format)
+                ].map(CURRENCY_FORMAT.format)
                 final_df[year_2 + " " + period_2 + ": " + customer] = final_df[
                     year_2 + " " + period_2 + ": " + customer
-                ].map("${:,.0f}".format)
+                ].map(CURRENCY_FORMAT.format)
 
-        final_df[year_1 + " " + period_1 + ":" + " Spends"] = final_df[
-            year_1 + " " + period_1 + ":" + " Spends"
-        ].map("${:,.0f}".format)
-        final_df[year_2 + " " + period_2 + ":" + " Spends"] = final_df[
-            year_2 + " " + period_2 + ":" + " Spends"
-        ].map("${:,.0f}".format)
+        final_df[year_1 + " " + period_1 + ":" + SPENDS] = final_df[
+            year_1 + " " + period_1 + ":" + SPENDS
+        ].map(CURRENCY_FORMAT.format)
+        final_df[year_2 + " " + period_2 + ":" + SPENDS] = final_df[
+            year_2 + " " + period_2 + ":" + SPENDS
+        ].map(CURRENCY_FORMAT.format)
 
         # full_media_hierarchy = pd.DataFrame.from_records(
         #     self.reporting_dao.get_media_hierarchy_download_data()).sort_values(by=['node_seq', 'node_id'])

@@ -17,6 +17,10 @@ logger = get_logger(__name__)
 EXTERNAL_FACTORS_MARKETING_BASE = 'External Factors/Marketing/Base'
 SPEND_EFFECT = "Spend Effect"
 EFFICIENCY_EFFECT = "Efficiency Effect"
+FORMAL_STRING = r"^\s*$"
+CURRENCY_FORMAT = "${:,.0f}"
+OUTCOME_1 = " : coutcome1"
+OUTCOME_2 =" : coutcome2"
 
 class ScenarioComparisonHandler(object):
     def __init__(self):
@@ -147,7 +151,7 @@ class ScenarioComparisonHandler(object):
         media_hierarchy["leaf_nodes"] = media_hierarchy["leaf_nodes"].map(eval)
         spend_allocation1 = media_hierarchy.merge(
             s1_results, on="node_name", how="left"
-        ).replace(r"^\s*$", np.nan, regex=True)
+        ).replace(FORMAL_STRING, np.nan, regex=True)
         spend_allocation1 = spend_allocation1.rename(
             index=str,
             columns={
@@ -161,7 +165,7 @@ class ScenarioComparisonHandler(object):
 
         spend_allocation2 = media_hierarchy.merge(
             s2_results, on="node_name", how="left"
-        ).replace(r"^\s*$", np.nan, regex=True)
+        ).replace(FORMAL_STRING, np.nan, regex=True)
         spend_allocation2 = spend_allocation2.rename(
             index=str,
             columns={
@@ -615,10 +619,10 @@ class ScenarioComparisonHandler(object):
         # In case, we need DMA level reporting, comment this line and
         # comment the above line
         # self.df = media_hierarchy.merge(results, on=["node_name"], how="left").replace(
-        #     r"^\s*$", np.nan, regex=True
+        #     FORMAL_STRING, np.nan, regex=True
         # )
         self.df = media_hierarchy.merge(results, on=["node_name"], how="left", validate="many_to_many").replace(
-            r"^\s*$", np.nan, regex=True
+            FORMAL_STRING, np.nan, regex=True
         )
         self.df = self.df.rename(
             index=str,
@@ -1101,30 +1105,30 @@ class ScenarioComparisonHandler(object):
         final_df = final_df.drop_duplicates()
         if len(customer_list) == 1:
             if customer_list[0] == "outcome1":
-                final_df[final_df.columns[1].split(":")[0] + " : coutcome1"] = (
+                final_df[final_df.columns[1].split(":")[0] + OUTCOME_1] = (
                     final_df[final_df.columns[1]] / final_df[final_df.columns[3]]
                 )
-                final_df[final_df.columns[2].split(":")[0] + " : coutcome1"] = (
+                final_df[final_df.columns[2].split(":")[0] + OUTCOME_1] = (
                     final_df[final_df.columns[2]] / final_df[final_df.columns[4]]
                 )
             else:
-                final_df[final_df.columns[1].split(":")[0] + " : coutcome2"] = (
+                final_df[final_df.columns[1].split(":")[0] + OUTCOME_2] = (
                     final_df[final_df.columns[1]] / final_df[final_df.columns[3]]
                 )
-                final_df[final_df.columns[2].split(":")[0] + " : coutcome2"] = (
+                final_df[final_df.columns[2].split(":")[0] + OUTCOME_2] = (
                     final_df[final_df.columns[2]] / final_df[final_df.columns[4]]
                 )
         else:
-            final_df[final_df.columns[1].split(":")[0] + " : coutcome1"] = (
+            final_df[final_df.columns[1].split(":")[0] + OUTCOME_1] = (
                 final_df[final_df.columns[1]] / final_df[final_df.columns[3]]
             )
-            final_df[final_df.columns[2].split(":")[0] + " : coutcome1"] = (
+            final_df[final_df.columns[2].split(":")[0] + OUTCOME_1] = (
                 final_df[final_df.columns[2]] / final_df[final_df.columns[5]]
             )
-            final_df[final_df.columns[1].split(":")[0] + " : coutcome2"] = (
+            final_df[final_df.columns[1].split(":")[0] + OUTCOME_2] = (
                 final_df[final_df.columns[1]] / final_df[final_df.columns[4]]
             )
-            final_df[final_df.columns[2].split(":")[0] + " : coutcome2"] = (
+            final_df[final_df.columns[2].split(":")[0] + OUTCOME_2] = (
                 final_df[final_df.columns[2]] / final_df[final_df.columns[6]]
             )
         final_df = final_df.fillna(0)
@@ -1141,12 +1145,12 @@ class ScenarioComparisonHandler(object):
                 final_df[
                     final_df.columns[1].split(":")[0] + " : " + customer
                 ] = final_df[final_df.columns[1].split(":")[0] + " : " + customer].map(
-                    "${:,.0f}".format
+                    CURRENCY_FORMAT.format
                 )
                 final_df[
                     final_df.columns[2].split(":")[0] + " : " + customer
                 ] = final_df[final_df.columns[2].split(":")[0] + " : " + customer].map(
-                    "${:,.0f}".format
+                    CURRENCY_FORMAT.format
                 )
         for index, scenario_id in enumerate(scenarios):
             si_name = self.scenario_comparison_dao.get_scenario_name(scenario_id)[0][
@@ -1164,7 +1168,7 @@ class ScenarioComparisonHandler(object):
 
             final_df[si_name + " : " + "Spends"] = final_df[
                 si_name + " : " + "Spends"
-            ].map("${:,.0f}".format)
+            ].map(CURRENCY_FORMAT.format)
 
         full_media_hierarchy = pd.DataFrame.from_records(
             self.scenario_comparison_dao.get_media_hierarchy_download_data()
