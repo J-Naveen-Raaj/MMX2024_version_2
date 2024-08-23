@@ -8122,6 +8122,7 @@
 
   // TODO Use d3-polygon’s polygonContains here for the ring check?
   // TODO Eliminate duplicate buffering in clipBuffer and polygon.push?
+
   function clipRectangle(x0, y0, x1, y1) {
 
     function visible(x, y) {

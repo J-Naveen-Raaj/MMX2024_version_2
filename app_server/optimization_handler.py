@@ -392,45 +392,45 @@ class OptimizationHandler(object):
         return group_constraints
 
 
-    # def create_optimization_scenario(self, request):
-    #     logger.info(
-    #         "creating a new optimization scenario with scenario name %s",
-    #         request["scenario_name"],
-    #     )
-    #     scenario_exist = self.optimization_dao.check_optimization_scenario_exist(
-    #         request["scenario_name"]
-    #     )
-    #     current_user.name = 'User'
-    #     if current_user.name:
-    #         if scenario_exist[0]["no_of_scenario"] == 0:
-    #             # transaction =self.db_conn.conn.begin()
-    #             self.optimization_dao.insert_optimization_scenario(
-    #                 request, current_user.name
-    #             )
-    #             record_id = int(
-    #                 pd.DataFrame.from_records(self.common_dao.get_optimization_scenario())
-    #                 .sort_values(by="id")
-    #                 .tail(1)["id"]
-    #                 .values[0]
-    #             )
-    #             return record_id
-    #         else:
-    #             logger.info(
-    #                 "scenario name %s already existing for the optimization scenario",
-    #                 request["scenario_name"],
-    #             )
-    #             return {
-    #                 "status": 303,
-    #                 "message": SCENARIO_EXISTS_MESSAGE,
-    #             }
-    #     else:
-    #         logger.info(
-    #             "token expired please login again",
-    #         )
-    #         return {
-    #             "status": 401,
-    #             "message": "Token expired! Please login again",
-    #         }
+    def create_optimization_scenario(self, request):
+        logger.info(
+            "creating a new optimization scenario with scenario name %s",
+            request["scenario_name"],
+        )
+        scenario_exist = self.optimization_dao.check_optimization_scenario_exist(
+            request["scenario_name"]
+        )
+        current_user.name = 'User'
+        if current_user.name:
+            if scenario_exist[0]["no_of_scenario"] == 0:
+                # transaction =self.db_conn.conn.begin()
+                self.optimization_dao.insert_optimization_scenario(
+                    request, current_user.name
+                )
+                record_id = int(
+                    pd.DataFrame.from_records(self.common_dao.get_optimization_scenario())
+                    .sort_values(by="id")
+                    .tail(1)["id"]
+                    .values[0]
+                )
+                return record_id
+            else:
+                logger.info(
+                    "scenario name %s already existing for the optimization scenario",
+                    request["scenario_name"],
+                )
+                return {
+                    "status": 303,
+                    "message": SCENARIO_EXISTS_MESSAGE,
+                }
+        else:
+            logger.info(
+                "token expired please login again",
+            )
+            return {
+                "status": 401,
+                "message": "Token expired! Please login again",
+            }
 
     def get_individual_basespends(self, request, period_type):
         results = self.optimization_dao.fetch_individual_basespends(
@@ -620,12 +620,14 @@ class OptimizationHandler(object):
             base_sum,
         )
 
-    def prepare_initial_data(self, optimization_scenario_id, request_data):
+    def save_individual_spend_bounds_for_opt_scenario(
+        self, optimization_scenario_id, request_data
+    ):
         result = pd.DataFrame.from_records(
             self.get_individual_basespends(
                 optimization_scenario_id, request_data["period_type"]
-                )
             )
+        )
         result["lock"] = "Yes"
         result[LOWER_BOUND_PERCENT] = ""
         result[UPPER_BOUND_PERCENT] = ""
@@ -635,20 +637,28 @@ class OptimizationHandler(object):
         result[UPPER_BOUND_EFF] = result["spend"]
         result["optimization_scenario_id"] = optimization_scenario_id
         result["period_type"] = request_data["period_type"]
-        return result
 
-    def fetch_variable_mapping(self):
-        return pd.read_sql_query(
+        # get variable node mapping
+
+        variable_df = pd.read_sql_query(
             SQL_SELECT_VARIABLES,
             self.conn_without_factory,
-            )
+        )
 
-    def delete_existing_spend_bounds(self, optimization_scenario_id):
+        results = pd.merge(result, variable_df, on="variable_name")
+
+        results.rename(
+            columns={LOWER_BOUND_EFF: "lowerbound", UPPER_BOUND_EFF: "upperbound"},
+            inplace=True,
+        )
+        # Delete existing spend bounds for current scenario
+        # transaction =self.db_conn.conn.begin()
         self.optimization_dao.delete_existing_individual_spend_bounds(
             int(optimization_scenario_id)
-            )
-
-    def insert_new_spend_bounds(self, results):
+        )
+        # transaction.commit()
+        # self.db_conn.conn.close()
+        # Insert spend bound for current scenario
         results = results.rename(columns={"spend": "base_spend"})
         UtilsHandler().insert_dataframe_to_mssql(
             results[
@@ -661,13 +671,14 @@ class OptimizationHandler(object):
                     "lowerbound",
                     "upperbound",
                     "base_spend",
-                    ]
-                ],
+                ]
+            ],
             "individual_spend_bounds",
-            )
-        return results.rename(columns={"base_spend": "spend"})
-
-    def filter_and_aggregate_data(self, result, request_data):
+        )
+        results = results.rename(columns={"base_spend": "spend"})
+        print(self.optimization_dao.fetch_base_scenario(optimization_scenario_id))
+        # results[['optimization_scenario_id', 'variable_id', 'lock', 'period', 'lowerbound', 'upperbound']].to_sql(
+        #    name = 'individual_spend_bounds', con = self.conn_without_factory, if_exists = 'append', index = False)
         result["lock"] = 1
         result_filtered = result[
             (~result["variable_name"].str.contains("_FLAGS_"))
@@ -692,128 +703,19 @@ class OptimizationHandler(object):
             on=["variable_name", "variable_description"],
             how="left",
         )
-        return merged_df.sort_values(
+
+        result_filtered = merged_df.sort_values(
             by=["variable_category", "spend_agg"], ascending=[True, False]
         ).reset_index(drop=True)
-
-    def compute_results_and_summaries(self, result_filtered):
+        # response= {}
         lower_bound_sum = round(result_filtered[LOWER_BOUND_DOLLAR].sum(), 0)
         upper_bound_sum = round(result_filtered[UPPER_BOUND_DOLLAR].sum(), 0)
         base_spend_sum = round(result_filtered["spend"].sum(), 0)
         results = result_filtered.fillna("").to_dict("records")
+        # response["lower_bound_sum"]=lower_bound_sum
+        # response["upper_bound_sum"]=upper_bound_sum
+        # response["results"]=results
         return results, upper_bound_sum, lower_bound_sum, base_spend_sum
-
-    def save_individual_spend_bounds_for_opt_scenario(
-        self, optimization_scenario_id, request_data
-    ):
-        result = self.prepare_initial_data(optimization_scenario_id, request_data)
-        variable_df = self.fetch_variable_mapping()
-        results = pd.merge(result, variable_df, on="variable_name")
-        results.rename(
-            columns={LOWER_BOUND_EFF: "lowerbound", UPPER_BOUND_EFF: "upperbound"},
-            inplace=True,
-            )
-        self.delete_existing_spend_bounds(optimization_scenario_id)
-        results = self.insert_new_spend_bounds(results)
-        result_filtered = self.filter_and_aggregate_data(result, request_data)
-        return self.compute_results_and_summaries(result_filtered)
-
-    # def save_individual_spend_bounds_for_opt_scenario(
-    #     self, optimization_scenario_id, request_data
-    # ):
-    #     result = pd.DataFrame.from_records(
-    #         self.get_individual_basespends(
-    #             optimization_scenario_id, request_data["period_type"]
-    #         )
-    #     )
-    #     result["lock"] = "Yes"
-    #     result[LOWER_BOUND_PERCENT] = ""
-    #     result[UPPER_BOUND_PERCENT] = ""
-    #     result[LOWER_BOUND_DOLLAR] = np.floor(result["spend"])
-    #     result[UPPER_BOUND_DOLLAR] = result["spend"]
-    #     result[LOWER_BOUND_EFF] = np.floor(result["spend"])
-    #     result[UPPER_BOUND_EFF] = result["spend"]
-    #     result["optimization_scenario_id"] = optimization_scenario_id
-    #     result["period_type"] = request_data["period_type"]
-
-    #     # get variable node mapping
-
-    #     variable_df = pd.read_sql_query(
-    #         SQL_SELECT_VARIABLES,
-    #         self.conn_without_factory,
-    #     )
-
-    #     results = pd.merge(result, variable_df, on="variable_name")
-
-    #     results.rename(
-    #         columns={LOWER_BOUND_EFF: "lowerbound", UPPER_BOUND_EFF: "upperbound"},
-    #         inplace=True,
-    #     )
-    #     # Delete existing spend bounds for current scenario
-    #     # transaction =self.db_conn.conn.begin()
-    #     self.optimization_dao.delete_existing_individual_spend_bounds(
-    #         int(optimization_scenario_id)
-    #     )
-    #     # transaction.commit()
-    #     # self.db_conn.conn.close()
-    #     # Insert spend bound for current scenario
-    #     results = results.rename(columns={"spend": "base_spend"})
-    #     UtilsHandler().insert_dataframe_to_mssql(
-    #         results[
-    #             [
-    #                 "optimization_scenario_id",
-    #                 "variable_id",
-    #                 "lock",
-    #                 "period",
-    #                 "period_type",
-    #                 "lowerbound",
-    #                 "upperbound",
-    #                 "base_spend",
-    #             ]
-    #         ],
-    #         "individual_spend_bounds",
-    #     )
-    #     results = results.rename(columns={"base_spend": "spend"})
-    #     print(self.optimization_dao.fetch_base_scenario(optimization_scenario_id))
-    #     # results[['optimization_scenario_id', 'variable_id', 'lock', 'period', 'lowerbound', 'upperbound']].to_sql(
-    #     #    name = 'individual_spend_bounds', con = self.conn_without_factory, if_exists = 'append', index = False)
-    #     result["lock"] = 1
-    #     result_filtered = result[
-    #         (~result["variable_name"].str.contains("_FLAGS_"))
-    #         & (result["variable_name"].str.startswith("M_"))
-    #     ].reset_index(drop=True)
-    #     period_start = int(request_data["period_start"])
-    #     period_end = int(request_data["period_end"])
-    #     result_filtered = result_filtered[
-    #         (result_filtered["period"] >= period_start)
-    #         & (result_filtered["period"] <= period_end)
-    #     ]
-    #     result_df = (
-    #         result_filtered.groupby(["variable_name", "variable_description"])
-    #         .agg({"spend": "sum"})
-    #         .reset_index()
-    #     )
-    #     result_df_sorted = result_df.sort_values(by="spend", ascending=False)
-    #     result_df_sorted.rename(columns={"spend": "spend_agg"}, inplace=True)
-    #     merged_df = pd.merge(
-    #         result_filtered,
-    #         result_df_sorted[["variable_name", "variable_description", "spend_agg"]],
-    #         on=["variable_name", "variable_description"],
-    #         how="left",
-    #     )
-
-    #     result_filtered = merged_df.sort_values(
-    #         by=["variable_category", "spend_agg"], ascending=[True, False]
-    #     ).reset_index(drop=True)
-    #     # response= {}
-    #     lower_bound_sum = round(result_filtered[LOWER_BOUND_DOLLAR].sum(), 0)
-    #     upper_bound_sum = round(result_filtered[UPPER_BOUND_DOLLAR].sum(), 0)
-    #     base_spend_sum = round(result_filtered["spend"].sum(), 0)
-    #     results = result_filtered.fillna("").to_dict("records")
-    #     # response["lower_bound_sum"]=lower_bound_sum
-    #     # response["upper_bound_sum"]=upper_bound_sum
-    #     # response["results"]=results
-    #     return results, upper_bound_sum, lower_bound_sum, base_spend_sum
 
     def update_individual_spend_bounds(self, request):
         # Get the optimization type
