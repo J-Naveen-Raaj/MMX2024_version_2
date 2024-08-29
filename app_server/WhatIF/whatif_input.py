@@ -18,6 +18,9 @@ from app_server.MMOptim.static_input import (
 )
 from app_server.scenario_dao import ScenarioDAO
 
+SPEND_VARIABLE_COL = "Spend Variable"
+WEEK_END_DATE_COL = "Week end Date"
+
 # %% Load Data
 db_conn = DatabaseHandler().get_database_conn()
 scenario_dao = ScenarioDAO(db_conn)
@@ -129,7 +132,7 @@ def get_input_data():
     spend_variables = pd.DataFrame.from_records(variablelevel_file)
     spend_variables.rename(
         columns={
-            "Spend_Variable": "Spend Variable",
+            "Spend_Variable": SPEND_VARIABLE_COL,
             "Variable_Category": "Variable Category",
             "Variable_Description": "Variable Description",
         },
@@ -150,15 +153,15 @@ def get_input_data():
     calendar = pd.DataFrame.from_records(calendardata)
     calendar.rename(
         columns={
-            "Week_end_Date": "Week end Date",
+            "Week_end_Date": WEEK_END_DATE_COL,
             "month": "MONTH",
             "year": "YEAR",
             "quarter": "QUARTER",
         },
         inplace=True,
     )
-    calendar["Week end Date"] = pd.to_datetime(
-        calendar["Week end Date"],
+    calendar[WEEK_END_DATE_COL] = pd.to_datetime(
+        calendar[WEEK_END_DATE_COL],
         infer_datetime_format=True,
         # format="%d-%m-%Y",
         format="%d-%m-%Y",
@@ -212,14 +215,14 @@ def get_variable_levels():
     variable_levels = pd.DataFrame.from_records(variablelevel_file)
     variable_levels.rename(
         columns={
-            "Spend_Variable": "Spend Variable",
+            "Spend_Variable": SPEND_VARIABLE_COL,
             "Variable_Category": "Variable Category",
             "Variable_Description": "Variable Description",
         },
         inplace=True,
     )
 
-    variable_levels.set_index("Spend Variable", inplace=True)
+    variable_levels.set_index(SPEND_VARIABLE_COL, inplace=True)
 
     variable_levels["multiplier"] = (25 ** (1 - variable_levels["Vary_by_GEO"])) * (
         3 ** (1 - variable_levels["Vary_by_SEG"])

@@ -6,6 +6,8 @@ import pandas as pd
 
 from app_server.MMOptim.utils.data_utils import get_array_position
 
+BASE_SCENARIO_SHEET_NAME = "Base Scenario"
+VARIABLE_NAME = "Variable Name"
 # %% Function to get optimization input from excel
 
 
@@ -26,7 +28,7 @@ def get_optim_input(optim_input_dir, optim_input_file, spend_vars=None):
     ## Base Scenario
     base_scenario = pd.read_excel(
         os.path.join(optim_input_dir, optim_input_file),
-        sheet_name="Base Scenario",
+        sheet_name=BASE_SCENARIO_SHEET_NAME,
         index_col=0,
     )
     if spend_vars is not None:
@@ -41,7 +43,7 @@ def get_optim_input(optim_input_dir, optim_input_file, spend_vars=None):
         os.path.join(optim_input_dir, optim_input_file),
         sheet_name="Individual Bounds - Quarterly",
     )
-    var_bounds.set_index(["Variable Name", "Time Period"], inplace=True)
+    var_bounds.set_index([VARIABLE_NAME, "Time Period"], inplace=True)
     #    if spend_vars is not None:
     #        var_bounds = var_bounds.loc[spend_vars,:]
     # When individual variables are locked,
@@ -49,7 +51,7 @@ def get_optim_input(optim_input_dir, optim_input_file, spend_vars=None):
     cond = var_bounds["Lock"] == "Yes"
     if np.any(cond):
         var_bounds.loc[cond, ["Lower Bound", "Upper Bound"]] = var_bounds.loc[
-            cond, "Base Scenario"
+            cond, BASE_SCENARIO_SHEET_NAME
         ]
 
     ## Variable Group Definition - For Group Constraints
@@ -78,7 +80,6 @@ def get_optim_input(optim_input_dir, optim_input_file, spend_vars=None):
 
 
 # %% Function to process optimization input
-
 
 # def process_optim_input(optim_input, spend_vars, period_list, refc_scenario):
 def process_optim_input(optim_input, spend_vars, period_list):

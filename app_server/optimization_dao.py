@@ -2,6 +2,7 @@ import datetime
 
 import pytz
 
+TIMEZONE_US_PACIFIC = 'US/Pacific'
 
 class OptimizationDAO(object):
     """ """
@@ -107,7 +108,7 @@ class OptimizationDAO(object):
         select id,
             name
         from optimization_scenario os
-        inner join spend_scenario ss on ss.scenario_name = os.name 
+        inner join spend_scenario ss on ss.scenario_name = os.name
         where optimized_scenario_id is not null
         """
         return self.conn.processquery(query)
@@ -167,7 +168,7 @@ class OptimizationDAO(object):
 
         """
         # user_timezone = inputs.get('userTimezone', 'UTC')
-        user_timezone = pytz.timezone('US/Pacific')
+        user_timezone = pytz.timezone(TIMEZONE_US_PACIFIC)
         current_time_user = datetime.datetime.now(user_timezone)
         query = (
             "insert into optimization_scenario (name,optimization_type_id,outcome_maximize,base_scenario_id,"
@@ -436,7 +437,7 @@ class OptimizationDAO(object):
         -------
 
         """
-        user_timezone = pytz.timezone('US/Pacific')
+        user_timezone = pytz.timezone(TIMEZONE_US_PACIFIC)
         current_time_user = datetime.datetime.now(user_timezone)
         query = "insert into scenarios (name,scenario_type,created_on) values (:scenario_name, :scenario_type,  :created_on) "
         argument_list = [{"scenario_name": scenario_name, "scenario_type": "Optimized","created_on":  current_time_user.strftime("%Y-%m-%d %H:%M:%S")}]
@@ -453,7 +454,7 @@ class OptimizationDAO(object):
         -------
 
         """
-        user_timezone = pytz.timezone('US/Pacific')
+        user_timezone = pytz.timezone(TIMEZONE_US_PACIFIC)
         current_time_user = datetime.datetime.now(user_timezone)
         query = "insert into scenarios (name,scenario_type,username,active,created_on) values (:scenario_name, :scenario_type, :username,1,:created_on) "
         argument_list = [
@@ -708,13 +709,13 @@ class OptimizationDAO(object):
         from optimization_scenario s
         inner join optimization_scenario_outcome o on o.scenarioid = s.base_scenario_id
         inner join models m on m.id = o.model_id and m.active = 1
-        inner join scenarios sc on sc.id = s.base_scenario_id 
+        inner join scenarios sc on sc.id = s.base_scenario_id
         where s.id = :optimization_id
         union
         select 'Optimized' as name,o.Outcome,o.Segment,CAST(o.BaseAttribution as float) as BaseAttribution,CAST(o.MarketingAttribution as float) as MarketingAttribution,CAST(o.BaseAttribution + o.MarketingAttribution as float) as Total  from optimization_scenario s
         inner join optimization_scenario_outcome o on o.scenarioid = s.optimized_scenario_id
         inner join models m on m.id = o.model_id and m.active = 1
-        inner join scenarios sc on sc.id = s.optimized_scenario_id 
+        inner join scenarios sc on sc.id = s.optimized_scenario_id
         where s.id = :optimization_id
         """
         argument_list = [{"optimization_id": optimization_id}]
@@ -867,7 +868,7 @@ class OptimizationDAO(object):
                 vnm.variable_id
             from spend_scenario_details as ssd
             INNER JOIN variable_node_mapping as vnm on ssd.node_id = vnm.node_id
-            where 
+            where
                 ssd.period_type =:period_type
                 and ssd.scenario_id = :spend_scenario_details_id
             """

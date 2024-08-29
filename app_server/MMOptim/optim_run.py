@@ -41,9 +41,9 @@ from app_server.what_if_planner_handler import what_if_planner
 
 logger = get_logger(__name__)
 
+VARIABLE_NAME = "Variable Name"
 
 # %% Run Optimization
-
 
 def run_optimization(
     optim_input_file, optim_output_file=None, optim_input=None, **kwargs
@@ -401,7 +401,7 @@ def run_optimization(
         .rename(
             columns={
                 "Period": "period_name",
-                "Variable Name": "node_name",
+                VARIABLE_NAME: "node_name",
             }
         )
     )
@@ -412,7 +412,7 @@ def run_optimization(
             lambda val: (val - 1) // 3 + 1
         )
         monthly_base_scenario = monthly_base_scenario.rename(
-            columns={"Variable Name": "node_name"}
+            columns={VARIABLE_NAME: "node_name"}
         )
         monthly_base_scenario["spend_value"] = (
             monthly_base_scenario["spend_value"].fillna(0) + 1
@@ -437,9 +437,9 @@ def run_optimization(
         )
         optimal_scenario = pd.pivot_table(
             data=optimal_monthly_spend.rename(
-                columns={"node_name": "Variable Name", "QUARTER": "Period"}
+                columns={"node_name": VARIABLE_NAME, "QUARTER": "Period"}
             ),
-            index=["Variable Name"],
+            index=[VARIABLE_NAME],
             columns="Period",
             values=["spend_value"],
             aggfunc=sum,

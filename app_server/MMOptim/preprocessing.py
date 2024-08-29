@@ -4,6 +4,8 @@ import pandas as pd
 
 from app_server.MMOptim.constants import DATE_COL, OUTCOME_VARS, SEG_COL
 
+WEEK_END_DATE_COL = "Week end Date"
+
 
 def filter_data(all_data, ref_calendar, period_type, start_period, end_period):
     """
@@ -33,10 +35,10 @@ def filter_data(all_data, ref_calendar, period_type, start_period, end_period):
 
     # Start and end date for optimization in reference callendar
     start_date = ref_calendar.loc[
-        ref_calendar[period_type] == start_period, "Week end Date"
+        ref_calendar[period_type] == start_period, WEEK_END_DATE_COL
     ].min()
     end_date = ref_calendar.loc[
-        ref_calendar[period_type] == end_period, "Week end Date"
+        ref_calendar[period_type] == end_period, WEEK_END_DATE_COL
     ].max()
 
     # Filter data for a given period
@@ -56,7 +58,7 @@ def get_ref_calendar_outcome_totals(data, ref_calendar, time_var=None):
     """
     data.rename(columns={'OUTCOME2': 'outcome2','OUTCOME1':'outcome1'}, inplace=True)
     outcome_data = pd.merge(
-        ref_calendar.rename(columns={"Week end Date": DATE_COL}),
+        ref_calendar.rename(columns={WEEK_END_DATE_COL: DATE_COL}),
         data[[DATE_COL, SEG_COL] + OUTCOME_VARS],
         on=DATE_COL,
     )

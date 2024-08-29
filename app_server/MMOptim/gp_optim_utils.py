@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-For Running Optimization 
+For Running Optimization
 
 """
 
@@ -107,13 +107,19 @@ def get_init_sol(lower_bounds, upper_bounds, budget, constraints, method="simple
     b_ub = np.atleast_1d(b_ub) if len(b_ub) else None
 
     # Decimal conversion
+    # try:
+    #     b_ub = np.round(b_ub, decimals=0)
+    #     b_eq = np.round(b_eq, decimals=0)
+    # except:
+    #     b_ub = b_ub
+    #     b_eq = b_eq
     try:
         b_ub = np.round(b_ub, decimals=0)
         b_eq = np.round(b_eq, decimals=0)
-    except:
-        b_ub = b_ub
-        b_eq = b_eq
-
+    except (ValueError, TypeError) as e:
+        logging.error(f"Error during rounding: {e}")
+        # Optionally re-raise the exception if you want to halt execution
+        raise
     ## Intial point for gradient projection
     ## Find a few points in feasible set
     ## Take an average of the points as starting point to avoid starting at edges.
