@@ -29,6 +29,10 @@ from config import (APP_LOG_FILES_DIR, OP_INPUT_FILES_DIR, OP_LOG_FILES_DIR,
 logger = get_logger(__name__)
 executor = ThreadPoolExecutor()
 
+text_csv = "text/csv"
+XLSX_FORMAT = ".xlsx"
+ATTACHMENT_FILENAME = "attachment; filename="
+
 def default(o):
     if isinstance(o, np.int64):
         return int(o)
@@ -231,7 +235,7 @@ def downloadScenarioPlanningReport():
     resp.headers["Content-Disposition"] = (
         "attachment; filename=scenario_data_" + request_data["period_type"] + ".csv"
     )
-    resp.headers["Content-Type"] = "text/csv"
+    resp.headers["Content-Type"] = text_csv
     return resp
 
 
@@ -291,7 +295,7 @@ def DownloadReportingSoc():
             + quarters[1]
             + " "
             + request_data.get("outcome")
-            + ".xlsx"
+            + XLSX_FORMAT
         )
     elif request_data.get("period_type") == "halfyear":
         years = eval(request_data.get("years"))
@@ -318,7 +322,7 @@ def DownloadReportingSoc():
             + halfyears[1]
             + " "
             + request_data.get("outcome")
-            + ".xlsx"
+            + XLSX_FORMAT
         )
     else:
         years = eval(request_data.get("years"))
@@ -326,7 +330,7 @@ def DownloadReportingSoc():
             years[0] + " - " + years[1] + " " + request_data.get("outcome") + ".csv"
         )
         filename_excel = (
-            years[0] + " - " + years[1] + " " + request_data.get("outcome") + ".xlsx"
+            years[0] + " - " + years[1] + " " + request_data.get("outcome") + XLSX_FORMAT
         )
 
     return generate_excel_or_csv_file(
@@ -388,14 +392,14 @@ def generate_excel_or_csv_file(
     """
     if download_type == "csv":
         resp = make_response(result.to_csv(encoding="utf-8", index=False))
-        resp.headers["Content-Disposition"] = "attachment; filename=" + filename_csv
-        resp.headers["Content-Type"] = "text/csv"
+        resp.headers["Content-Disposition"] = ATTACHMENT_FILENAME + filename_csv
+        resp.headers["Content-Type"] = text_csv
         resp.headers["Set-Cookie"] = setCookie
         return resp
     else:
         excel_name = filename_excel
         if report_type == "reporting_soc" and len(filename_excel) >= 31:
-            excel_name = outcome_name + ".xlsx"
+            excel_name = outcome_name + XLSX_FORMAT
         output = io.BytesIO()
         # Use the BytesIO object as the filehandle.
         writer = pd.ExcelWriter(output, engine="xlsxwriter")
@@ -406,7 +410,7 @@ def generate_excel_or_csv_file(
         writer.save()
         xlsx_data = output.getvalue()
         resp = make_response(xlsx_data)
-        resp.headers["Content-Disposition"] = "attachment; filename=" + excel_name
+        resp.headers["Content-Disposition"] = ATTACHMENT_FILENAME + excel_name
         resp.headers["Content-Type"] = "application/vnd.ms-excel"
         resp.headers["Set-Cookie"] = setCookie
         return resp
@@ -766,8 +770,8 @@ def downloadIndividualSpendBounds():
     )
     resp = make_response(result_filtered.to_csv(encoding="utf-8", index=False))
     filename = "Individual Spend Bounds.csv"
-    resp.headers["Content-Disposition"] = "attachment; filename=" + filename
-    resp.headers["Content-Type"] = "text/csv"
+    resp.headers["Content-Disposition"] = ATTACHMENT_FILENAME + filename
+    resp.headers["Content-Type"] = text_csv
     return resp
 
 def download_app_logs():
@@ -841,8 +845,8 @@ def download_app_logs():
         resp = make_response(result_filtered.to_csv(encoding="utf-8", index=False))
         user_name = request_data['user_name'] if request_data['user_name'] and request_data['user_name'] != 'null' and request_data['user_name'] != 'undefined' else 'user'
         filename = f"{user_name}_{request_data['scenario_name']}.csv" 
-        resp.headers["Content-Disposition"] = "attachment; filename=" + filename
-        resp.headers["Content-Type"] = "text/csv"
+        resp.headers["Content-Disposition"] = ATTACHMENT_FILENAME + filename
+        resp.headers["Content-Type"] = text_csv
         return resp
 
 
@@ -1069,8 +1073,8 @@ def download_waterfall_chart_data():
     waterfall_data = ReportingHandler().get_all_soc_data(request_data)
     resp = make_response(waterfall_data.to_csv(encoding="utf-8", index=False))
     filename = request_data["filename"]
-    resp.headers["Content-Disposition"] = "attachment; filename=" + filename
-    resp.headers["Content-Type"] = "text/csv"
+    resp.headers["Content-Disposition"] = ATTACHMENT_FILENAME + filename
+    resp.headers["Content-Type"] = text_csv
     return resp
 
 
@@ -1136,9 +1140,9 @@ def download_marginal_return_curves_data():
 
     resp = make_response(csv_data)
     resp.headers["Content-Disposition"] = (
-        "attachment; filename=" + "Marginal_Return_Curves" + ".csv"
+        ATTACHMENT_FILENAME + "Marginal_Return_Curves" + ".csv"
     )
-    resp.headers["Content-Type"] = "text/csv"  # Set content type to CSV
+    resp.headers["Content-Type"] = text_csv  # Set content type to CSV
     return resp
 
 def convert_excel_to_csv(excel_data):

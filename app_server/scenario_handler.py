@@ -28,6 +28,11 @@ from app_server.what_if_planner_handler import what_if_planner
 
 logger = get_logger(__name__)
 
+week_end_date = "week_end_date"
+Week_end_Date = "Week end Date"
+Variable_Name = "Variable Name"
+Variable_Description = "Variable Description"
+variable_description = "variable description"
 
 class ScenarioHandler(object):
     def __init__(self):
@@ -415,21 +420,21 @@ class ScenarioHandler(object):
                 }
             )
             weeks_of_base["count"] = 1
-            weeks_of_base["week_end_date"] = (
+            weeks_of_base[week_end_date] = (
                 weeks_of_base["date"] - to_offset(freq) + to_offset(freq)
             )
-            weeks_of_base["days_count"] = weeks_of_base.groupby(["week_end_date"])[
+            weeks_of_base["days_count"] = weeks_of_base.groupby([week_end_date])[
                 "count"
             ].transform(sum)
             weeks_of_base["week_period_repr"] = (
                 "W_"
-                + weeks_of_base["week_end_date"].dt.isocalendar().week.astype(str)
+                + weeks_of_base[week_end_date].dt.isocalendar().week.astype(str)
                 + " "
-                + weeks_of_base["week_end_date"].dt.strftime("%Y")
+                + weeks_of_base[week_end_date].dt.strftime("%Y")
                 + "-"
-                + weeks_of_base["week_end_date"].dt.strftime("%b")
+                + weeks_of_base[week_end_date].dt.strftime("%b")
                 + "-"
-                + weeks_of_base["week_end_date"].dt.day.astype(str)
+                + weeks_of_base[week_end_date].dt.day.astype(str)
             )
             simulated_spend_daily = pd.merge(
                 simulated_spend,
@@ -458,12 +463,12 @@ class ScenarioHandler(object):
 
         calendar = pd.DataFrame(self.scenario_dao.get_calendar())
         calendar = calendar.loc[calendar["YEAR"] == WHATIF_YEAR]
-        calendar["Week end Date"] = pd.to_datetime(
-            calendar["Week end Date"], format="%d-%m-%Y"
+        calendar[Week_end_Date] = pd.to_datetime(
+            calendar[Week_end_Date], format="%d-%m-%Y"
         )
         calendar.rename(
             columns={
-                "Week end Date": "date",
+                Week_end_Date: "date",
                 "Week_end_Date": "date",
                 "month": "X_MONTH",
                 "year": "X_YEAR",
@@ -608,21 +613,21 @@ class ScenarioHandler(object):
                 }
             )
             weeks_of_base["count"] = 1
-            weeks_of_base["week_end_date"] = (
+            weeks_of_base[week_end_date] = (
                 weeks_of_base["date"] - to_offset(freq) + to_offset(freq)
             )
-            weeks_of_base["days_count"] = weeks_of_base.groupby(["week_end_date"])[
+            weeks_of_base["days_count"] = weeks_of_base.groupby([week_end_date])[
                 "count"
             ].transform(sum)
             weeks_of_base["week_period_repr"] = (
                 "W_"
-                + weeks_of_base["week_end_date"].dt.isocalendar().week.astype(str)
+                + weeks_of_base[week_end_date].dt.isocalendar().week.astype(str)
                 + " "
-                + weeks_of_base["week_end_date"].dt.strftime("%Y")
+                + weeks_of_base[week_end_date].dt.strftime("%Y")
                 + "-"
-                + weeks_of_base["week_end_date"].dt.strftime("%b")
+                + weeks_of_base[week_end_date].dt.strftime("%b")
                 + "-"
-                + weeks_of_base["week_end_date"].dt.day.astype(str)
+                + weeks_of_base[week_end_date].dt.day.astype(str)
             )
             simulated_spend_daily = pd.merge(
                 simulated_spend,
@@ -651,12 +656,12 @@ class ScenarioHandler(object):
 
         calendar = pd.DataFrame(self.scenario_dao.get_calendar())
         calendar = calendar.loc[calendar["YEAR"] == WHATIF_YEAR]
-        calendar["Week end Date"] = pd.to_datetime(
-            calendar["Week end Date"], format="%d-%m-%Y"
+        calendar[Week_end_Date] = pd.to_datetime(
+            calendar[Week_end_Date], format="%d-%m-%Y"
         )
         calendar.rename(
             columns={
-                "Week end Date": "date",
+                Week_end_Date: "date",
                 "Week_end_Date": "date",
                 "month": "X_MONTH",
                 "year": "X_YEAR",
@@ -994,7 +999,7 @@ class ScenarioHandler(object):
             calendar = pd.DataFrame.from_records(calendardata)
             calendar.rename(
                 columns={
-                    "Week_end_Date": "Week end Date",
+                    "Week_end_Date": Week_end_Date,
                     "month": "MONTH",
                     "year": "YEAR",
                     "quarter": "QUARTER",
@@ -1078,18 +1083,18 @@ class ScenarioHandler(object):
     ):
         try:
             quarterly_columns = [
-                "Variable Name",
-                "Variable Description",
+                Variable_Name,
+                Variable_Description,
                 "Q1",
                 "Q2",
                 "Q3",
                 "Q4",
             ]
-            half_yearly_columns = ["Variable Name", "Variable Description", "H1", "H2"]
-            yearly_columns = ["Variable Name", "Variable Description", "Year"]
+            half_yearly_columns = [Variable_Name, Variable_Description, "H1", "H2"]
+            yearly_columns = [Variable_Name, Variable_Description, "Year"]
             monthly_columns = [
-                "Variable Name",
-                "Variable Description",
+                Variable_Name,
+                Variable_Description,
                 "Jan",
                 "Feb",
                 "Mar",
@@ -1104,8 +1109,8 @@ class ScenarioHandler(object):
                 "Dec",
             ]
             weekly_columns = [
-                "Variable Name",
-                "Variable Description",
+                Variable_Name,
+                Variable_Description,
                 "W_1",
                 "W_2",
                 "W_3",
@@ -1190,7 +1195,7 @@ class ScenarioHandler(object):
                     weeks_sp = []
                     weeks_or = []
                     for i in scenario_data.drop(
-                        ["Variable Name", "Variable Description"], axis=1
+                        [Variable_Name, Variable_Description], axis=1
                     ).columns:
                         weeks_sp.append(i.split(" ")[0])
                         weeks_or.append(i)
@@ -1228,8 +1233,8 @@ class ScenarioHandler(object):
                     }
                 scenario_data.rename(
                     columns={
-                        "Variable Name": "node_name",
-                        "Variable Description": "touchpoint_name",
+                        Variable_Name: "node_name",
+                        Variable_Description: "touchpoint_name",
                     },
                     inplace=True,
                 )
@@ -1350,7 +1355,7 @@ class ScenarioHandler(object):
             calendar = pd.DataFrame.from_records(calendardata)
             calendar.rename(
                 columns={
-                    "Week_end_Date": "Week end Date",
+                    "Week_end_Date": Week_end_Date,
                     "month": "MONTH",
                     "year": "YEAR",
                     "quarter": "QUARTER",
@@ -1513,27 +1518,27 @@ class ScenarioHandler(object):
             )
             scenario_list = scenario_list.rename(
                 columns={
-                    "variable_name": "Variable Name",
-                    "variable_description": "Variable Description",
+                    "variable_name": Variable_Name,
+                    "variable_description": Variable_Description,
                 }
             )
             scenario_list = scenario_list.rename(
                 columns={
-                    "Variable_Name": "Variable Name",
-                    "Variable_Description": "Variable Description",
+                    "Variable_Name": Variable_Name,
+                    "Variable_Description": Variable_Description,
                 }
             )
             scenario_pivot = scenario_list.pivot_table(
-                index=["Variable Name", "Variable Description"],
+                index=[Variable_Name, Variable_Description],
                 columns="period_name",
                 values="spend_value",
             ).reset_index()
 
-            scenario_pivot["variable description"] = scenario_pivot[
-                "Variable Description"
+            scenario_pivot[variable_description] = scenario_pivot[
+                Variable_Description
             ].str.lower()
-            scenario_pivot.sort_values("variable description", inplace=True)
-            scenario_pivot.drop("variable description", axis=1, inplace=True)
+            scenario_pivot.sort_values(variable_description, inplace=True)
+            scenario_pivot.drop(variable_description, axis=1, inplace=True)
 
             if period_type == "weekly":
                 w_columns = [
@@ -1544,12 +1549,12 @@ class ScenarioHandler(object):
                     key=lambda x: datetime.strptime(x.split(" ")[1], date_format)
                 )
                 scenario_pivot = scenario_pivot[
-                    ["Variable Name", "Variable Description"] + w_columns
+                    [Variable_Name, Variable_Description] + w_columns
                 ]
             elif period_type == "monthly":
                 columns_order = [
-                    "Variable Name",
-                    "Variable Description",
+                    Variable_Name,
+                    Variable_Description,
                     "Jan",
                     "Feb",
                     "Mar",
@@ -1565,8 +1570,8 @@ class ScenarioHandler(object):
                 ]
                 scenario_pivot = scenario_pivot[columns_order]
             scenario_pivot = scenario_pivot[
-                (~scenario_pivot["Variable Name"].str.contains("_FLAGS_"))
-                & (scenario_pivot["Variable Name"].str.startswith("M_"))
+                (~scenario_pivot[Variable_Name].str.contains("_FLAGS_"))
+                & (scenario_pivot[Variable_Name].str.startswith("M_"))
             ].reset_index(drop=True)
             return scenario_pivot
         except Exception as e:
