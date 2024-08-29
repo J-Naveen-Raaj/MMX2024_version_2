@@ -46,7 +46,6 @@ VARIABLE_CATEGORY = "Variable Category"
 BASE_SCENARIO = "Base Scenario"
 UPPER_BOUND = "Upper Bound"
 
-
 class OptimizationHandler(object):
     def __init__(self):
         self.db_conn = DatabaseHandler().get_database_conn()
